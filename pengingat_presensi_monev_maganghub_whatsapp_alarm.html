@@ -3,32 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pengingat Presensi Monev MagangHub — WhatsApp & Alarm</title>
-  <meta name="theme-color" content="#059669" />
+  <title>Alarm Presensi Monev MagangHub (20:00 & 22:00 — Wajib SS)</title>
+  <meta name="theme-color" content="#dc2626" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Monev Reminder" />
+  <meta name="apple-mobile-web-app-title" content="Alarm Monev SS" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
-      color: #0f172a;
+      background-color: #0f172a;
+      color: #f8fafc;
     }
-    .pulse-ring {
-      animation: pulseRing 2s infinite;
+    .alarm-gradient {
+      background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #ea580c 100%);
     }
-    @keyframes pulseRing {
-      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45); }
-      70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    .siren-flash {
+      animation: sirenFlash 0.9s infinite alternate;
     }
-    .wa-gradient {
-      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #0d9488 100%);
+    @keyframes sirenFlash {
+      0% { background-color: rgba(153, 27, 27, 0.92); box-shadow: inset 0 0 80px rgba(239, 68, 68, 0.7); }
+      100% { background-color: rgba(15, 23, 42, 0.96); box-shadow: inset 0 0 40px rgba(245, 158, 11, 0.5); }
+    }
+    .ring-shake {
+      animation: ringShake 0.4s infinite;
+    }
+    @keyframes ringShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-12deg) scale(1.08); }
+      75% { transform: rotate(12deg) scale(1.08); }
     }
     pre::-webkit-scrollbar {
       height: 6px;
@@ -43,348 +50,208 @@
 <body class="min-h-screen flex flex-col">
 
   <!-- Top Header -->
-  <header class="wa-gradient text-white shadow-md">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  <header class="alarm-gradient text-white shadow-xl border-b border-white/10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div class="flex items-center gap-3.5">
         <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-inner shrink-0">
-          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
         <div>
           <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Monev MagangHub Reminder</h1>
-            <span class="text-xs font-semibold uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">Auto WA & Alarm</span>
+            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">Alarm Monev MagangHub</h1>
+            <span class="text-[11px] font-bold uppercase tracking-wider bg-black/30 border border-white/20 px-2.5 py-0.5 rounded-full">Wajib Bukti SS</span>
           </div>
-          <p class="text-emerald-50 text-xs sm:text-sm mt-0.5">Pengingat otomatis presensi & log harian setiap pukul 12:00, 15:30, dan 20:00</p>
+          <p class="text-red-100 text-xs sm:text-sm mt-0.5">Berbunyi pukul <strong>20:00</strong> & <strong>22:00 WIB</strong> • Alarm tidak akan berhenti sebelum Anda memasukkan Screenshot (SS) Monev</p>
         </div>
       </div>
 
       <!-- Live Clock & Next Countdown -->
-      <div class="bg-slate-900/25 backdrop-blur-md border border-white/15 rounded-2xl px-4 py-2.5 flex items-center justify-between md:justify-end gap-4">
+      <div class="bg-black/30 backdrop-blur-md border border-white/15 rounded-2xl px-4 py-2.5 flex items-center justify-between md:justify-end gap-4">
         <div>
-          <div class="text-[11px] uppercase tracking-wider text-emerald-100 font-medium">Waktu Sekarang</div>
-          <div id="liveClock" class="text-lg sm:text-xl font-extrabold tabular-nums tracking-tight">12:00:00</div>
+          <div class="text-[10px] uppercase tracking-wider text-red-200 font-semibold">Waktu Sekarang</div>
+          <div id="liveClock" class="text-lg sm:text-xl font-black tabular-nums tracking-tight">20:00:00 WIB</div>
         </div>
         <div class="h-8 w-px bg-white/20"></div>
         <div>
-          <div class="text-[11px] uppercase tracking-wider text-emerald-100 font-medium">Jadwal Berikutnya (<span id="nextSlotLabel">12:00</span>)</div>
-          <div id="countdownTimer" class="text-lg sm:text-xl font-extrabold text-amber-200 tabular-nums tracking-tight">--:--:--</div>
+          <div class="text-[10px] uppercase tracking-wider text-red-200 font-semibold">Alarm Berikutnya (<span id="nextSlotLabel">20:00</span>)</div>
+          <div id="countdownTimer" class="text-lg sm:text-xl font-black text-amber-300 tabular-nums tracking-tight">--:--:--</div>
         </div>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto border-t border-white/15 pt-2">
-      <button id="tabBtnDashboard" type="button" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-xl bg-slate-50 text-emerald-800 shadow-sm transition flex items-center gap-2 shrink-0">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-        Dashboard & Presensi
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 flex gap-1.5 overflow-x-auto border-t border-white/15 pt-2">
+      <button id="tabBtnDashboard" type="button" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-bold rounded-t-xl bg-slate-900 text-amber-400 shadow-sm transition flex items-center gap-2 shrink-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        Alarm 20:00 & 22:00 (Wajib SS)
       </button>
-      <button id="tabBtnWaBot" type="button" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-xl text-white/90 hover:bg-white/10 transition flex items-center gap-2 shrink-0">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-        Integrasi Bot WA Otomatis (24/7)
+      <button id="tabBtnHistory" type="button" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-bold rounded-t-xl text-white/85 hover:bg-white/10 transition flex items-center gap-2 shrink-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Galeri Riwayat Bukti SS
       </button>
-      <button id="tabBtnHistory" type="button" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-xl text-white/90 hover:bg-white/10 transition flex items-center gap-2 shrink-0">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Riwayat & Rekap Monev
-      </button>
-      <button id="tabBtnApk" type="button" class="tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-xl text-white/90 hover:bg-white/10 transition flex items-center gap-2 shrink-0">
+      <button id="tabBtnApk" type="button" class="tab-btn px-4 py-2.5 text-xs sm:text-sm font-bold rounded-t-xl text-white/85 hover:bg-white/10 transition flex items-center gap-2 shrink-0">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-        Versi Android (.APK & PWA)
+        Buat .APK via GitHub
       </button>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 flex-1">
+  <main class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 flex-1">
 
     <!-- Toast Notification -->
-    <div id="toastBanner" class="hidden fixed bottom-5 right-5 z-50 max-w-sm bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-3">
+    <div id="toastBanner" class="hidden fixed bottom-5 right-5 z-50 max-w-sm bg-slate-800 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-600 flex items-center gap-3">
       <span id="toastIcon" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
-      <p id="toastMessage" class="text-sm font-medium flex-1"></p>
+      <p id="toastMessage" class="text-xs sm:text-sm font-medium flex-1"></p>
       <button id="closeToastBtn" type="button" class="text-slate-400 hover:text-white text-xs font-bold px-1">✕</button>
     </div>
 
-    <!-- Active Alarm Modal -->
-    <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-emerald-500 animate-bounce">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <!-- =================================================================== -->
+    <!-- UNSTOPPABLE FULL-SCREEN ALARM MODAL (WAJIB UPLOAD SCREENSHOT MONEV) -->
+    <!-- =================================================================== -->
+    <div id="alarmModal" class="hidden fixed inset-0 z-50 siren-flash flex items-center justify-center p-4 overflow-y-auto">
+      <div class="bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border-4 border-red-500 text-white space-y-5 my-auto">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-red-600 text-white flex items-center justify-center shrink-0 ring-shake shadow-lg">
+            <svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
           </div>
           <div>
-            <span id="modalSessionBadge" class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Waktunya Presensi!</span>
-            <h3 id="modalTitle" class="text-lg font-bold text-slate-900 mt-1">Pengingat Presensi Monev MagangHub</h3>
+            <span id="modalSessionBadge" class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-red-600 text-white">SIRINE AKTIF • TIDAK BISA DITUTUP</span>
+            <h3 id="modalTitle" class="text-xl font-black text-white mt-1.5">WAKTUNYA ISI PRESENSI MONEV!</h3>
+            <p class="text-xs text-red-200 mt-0.5">Alarm ini berbunyi tanpa henti dan <strong>TIDAK AKAN MATI</strong> sampai Anda memasukkan Screenshot (SS) bukti pengisian Monev.</p>
           </div>
         </div>
-        <p id="modalMessage" class="text-sm text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-200 mb-5"></p>
-        <div class="flex flex-col sm:flex-row gap-2.5">
-          <button id="modalSendWaBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow">
-            Kirim / Buka Chat WA
-          </button>
-          <button id="modalMarkDoneBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm">
-            Sudah Isi Presensi
-          </button>
+
+        <!-- Step 1: Open Monev Portal if not filled yet -->
+        <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-300">Belum isi Monev malam ini?</span>
+            <a href="https://maganghub.kemnaker.go.id" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition">
+              Buka Web Monev & Ambil SS ↗
+            </a>
+          </div>
+
+          <!-- Step 2: File Input for Screenshot -->
+          <div class="pt-2 border-t border-slate-700/80">
+            <label for="alarmSsFileInput" class="block text-xs font-bold text-amber-300 mb-2">
+              Unggah Screenshot (SS) Bukti Pengisian Monev:
+            </label>
+            <input id="alarmSsFileInput" type="file" accept="image/*" class="block w-full text-xs text-slate-300 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer bg-slate-950 rounded-xl border border-slate-700 p-1.5" />
+          </div>
+
+          <!-- Preview of selected Screenshot inside Modal -->
+          <div id="modalSsPreviewBox" class="hidden pt-2 space-y-2">
+            <div class="flex items-center justify-between text-xs text-emerald-400 font-bold">
+              <span id="modalSsFileName">✓ Screenshot Terdeteksi</span>
+              <span id="modalSsFileSize" class="text-slate-400"></span>
+            </div>
+            <img id="modalSsPreviewImg" src="" alt="Preview Bukti SS Monev" class="max-h-48 w-auto mx-auto rounded-xl border-2 border-emerald-500 object-contain bg-black" />
+          </div>
         </div>
-        <button id="modalDismissBtn" type="button" class="mt-2.5 w-full py-2 text-xs font-medium text-slate-500 hover:text-slate-800">
-          Tutup Alarm
+
+        <!-- Stop Alarm Button (DISABLED until valid Screenshot is loaded!) -->
+        <button id="modalStopAlarmBtn" type="button" disabled class="w-full py-3.5 px-5 rounded-2xl font-black text-sm tracking-wide transition shadow-lg bg-slate-700 text-slate-400 cursor-not-allowed">
+          🔒 UNGGAH SCREENSHOT (SS) DULU UNTUK MEMATIKAN ALARM
         </button>
       </div>
     </div>
 
-    <!-- TAB 1: DASHBOARD & PRESENSI -->
+    <!-- TAB 1: ALARM 20:00 & 22:00 (WAJIB SS) -->
     <section id="viewDashboard" class="space-y-6">
-      <!-- Top Row: 3 Schedule Cards -->
-      <div>
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-          <div>
-            <h2 class="text-lg font-bold text-slate-900">Jadwal Pengingat Harian (3 Waktu)</h2>
-            <p class="text-xs text-slate-500">Status presensi Monev MagangHub hari ini (<span id="todayDateLabel" class="font-medium text-slate-700"></span>)</p>
-          </div>
+      <!-- Top Row Controls -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
           <div class="flex items-center gap-2">
-            <button id="testAlarmBtn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-              Tes Bunyi & Pop-up WA
-            </button>
-            <a id="openPortalLink" href="https://maganghub.kemnaker.go.id" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
-              <span>Buka Portal Monev</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <h2 class="text-base sm:text-lg font-extrabold text-white">Status Alarm Monev Hari Ini (<span id="todayDateLabel" class="text-amber-400"></span>)</h2>
           </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Jika pukul <strong>20:00 WIB</strong> Anda sudah mengunggah SS bukti Monev, alarm cadangan pukul <strong>22:00 WIB</strong> otomatis ikut tercatat aman.
+          </p>
         </div>
-
-        <div id="scheduleCardsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Rendered dynamically via JS -->
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button id="testAlarmBtn" type="button" class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-extrabold shadow-lg transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+            Tes Bunyi Sirine & Kunci SS
+          </button>
+          <a href="https://maganghub.kemnaker.go.id" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-bold transition">
+            Buka Portal Monev ↗
+          </a>
         </div>
       </div>
 
-      <!-- Bottom Grid: WhatsApp Configuration & Instant Trigger -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Left 7 cols: Pengaturan Nomor WA & Template Pesan -->
-        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <div>
-              <h3 class="text-base font-bold text-slate-900">Konfigurasi Kontak WhatsApp & Pengingat</h3>
-              <p class="text-xs text-slate-500">Nomor ini digunakan untuk pengiriman pesan WA langsung maupun script bot otomatis.</p>
-            </div>
-            <span id="waStatusPill" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Aktif</span>
-          </div>
+      <!-- 2 Alarm Cards Grid (20:00 and 22:00) -->
+      <div id="scheduleCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Populated dynamically via JS -->
+      </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="waPhoneInput" class="block text-xs font-semibold text-slate-700 mb-1">Nomor WhatsApp Anda (Gunakan kode 62)</label>
-              <input id="waPhoneInput" type="tel" placeholder="62895394853580" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
-              <p class="text-[11px] text-slate-400 mt-1">Contoh: 62895394853580 (otomatis mengubah awalan 08 menjadi 628)</p>
-            </div>
-
-            <div>
-              <label for="portalUrlInput" class="block text-xs font-semibold text-slate-700 mb-1">Link Portal Presensi Monev MagangHub</label>
-              <input id="portalUrlInput" type="url" placeholder="https://maganghub.kemnaker.go.id" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
-              <p class="text-[11px] text-slate-400 mt-1">Disertakan otomatis di dalam pesan pengingat WA Anda</p>
-            </div>
-          </div>
-
+      <!-- Direct Upload Box (Upload SS Sebelum Jam Alarm Berbunyi) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
-            <label for="userNameInput" class="block text-xs font-semibold text-slate-700 mb-1">Nama panggilan / Peserta Magang</label>
-            <input id="userNameInput" type="text" placeholder="Peserta MagangHub" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <h3 class="text-sm sm:text-base font-extrabold text-white">Setor Bukti Screenshot (SS) Monev Hari Ini Lebih Awal</h3>
+            <p class="text-xs text-slate-400">Sudah mengisi Monev sebelum jam 20:00? Unggah SS Anda di sini agar alarm pukul 20:00 & 22:00 nanti malam otomatis nonaktif untuk hari ini.</p>
           </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label for="waTemplateInput" class="block text-xs font-semibold text-slate-700">Template Pesan Pengingat WhatsApp</label>
-              <span class="text-[11px] text-slate-400">Variabel: <code class="bg-slate-100 px-1 rounded">{nama}</code> <code class="bg-slate-100 px-1 rounded">{sesi}</code> <code class="bg-slate-100 px-1 rounded">{jam}</code> <code class="bg-slate-100 px-1 rounded">{link}</code></span>
-            </div>
-            <textarea id="waTemplateInput" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-          </div>
-
-          <!-- Gateway Webhook Option (Direct in-browser fetch to Fonnte/Custom Webhook) -->
-          <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-3">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-xs font-bold text-slate-800">Kirim Otomatis Tanpa Klik via API Gateway (Opsional)</div>
-                <p class="text-[11px] text-slate-500">Jika diisi Token Fonnte, browser akan langsung menembak WA API saat jam 12:00, 15:30, dan 20:00 tiba.</p>
-              </div>
-              <label class="inline-flex items-center cursor-pointer">
-                <input id="autoGatewayToggle" type="checkbox" class="sr-only peer">
-                <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all relative peer-checked:bg-emerald-600"></div>
-              </label>
-            </div>
-            <div id="gatewayTokenBox" class="hidden pt-1">
-              <label for="fonnteTokenInput" class="block text-[11px] font-semibold text-slate-600 mb-1">API Token Fonnte (<a href="https://fonnte.com" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline">fonnte.com</a>)</label>
-              <input id="fonnteTokenInput" type="password" placeholder="Masukkan token API Fonnte Anda..." class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div class="flex items-center gap-3">
-              <label class="inline-flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
-                <input id="soundAlarmToggle" type="checkbox" checked class="rounded text-emerald-600 focus:ring-emerald-500" />
-                Suara Alarm Saat Jam Presensi
-              </label>
-            </div>
-            <div class="flex items-center gap-2">
-              <button id="saveConfigBtn" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition">
-                Simpan Pengaturan
-              </button>
-              <button id="sendInstantWaBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
-                <span>Kirim Tes WA Sekarang</span>
-              </button>
-            </div>
-          </div>
+          <span id="earlyUploadStatusBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 self-start sm:self-center">
+            Belum Ada SS Hari Ini
+          </span>
         </div>
 
-        <!-- Right 5 cols: Preview WhatsApp Bubble & Quick Checklist Notes -->
-        <div class="lg:col-span-5 flex flex-col gap-4">
-          <div class="bg-[#efeae2] rounded-2xl border border-slate-200/80 shadow-sm p-4 flex-1 flex flex-col justify-between relative overflow-hidden">
-            <div class="flex items-center gap-2.5 bg-[#075e54] text-white -mx-4 -mt-4 px-4 py-3 mb-4 shadow-sm">
-              <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-xs">MH</div>
-              <div class="flex-1 min-w-0">
-                <div class="text-xs font-bold truncate">Bot Pengingat Monev MagangHub</div>
-                <div class="text-[10px] text-emerald-100">online • jadwal 12:00, 15:30, 20:00</div>
-              </div>
-              <span class="text-[10px] bg-white/15 px-2 py-0.5 rounded-full">Preview WA</span>
-            </div>
-
-            <div class="my-auto">
-              <div class="bg-white rounded-2xl rounded-tl-none p-3.5 shadow-sm border border-slate-200/60 max-w-[92%] text-xs text-slate-800 whitespace-pre-line leading-relaxed" id="waPreviewBubble">
-              </div>
-              <div class="text-[10px] text-slate-500 mt-1.5 pl-1">Dijadwalkan otomatis: 12:00 Siang • 15:30 Sore • 20:00 Malam</div>
-            </div>
-
-            <div class="mt-4 pt-3 border-t border-black/5 flex items-center justify-between text-xs">
-              <span class="text-slate-600 font-medium">Target: <strong id="previewTargetPhone" class="text-slate-900">Belum diisi</strong></span>
-              <button id="copyMessageBtn" type="button" class="text-emerald-700 hover:text-emerald-900 font-semibold underline">Salin Teks</button>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          <div class="md:col-span-7 space-y-3">
+            <input id="directSsFileInput" type="file" accept="image/*" class="block w-full text-xs text-slate-300 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer bg-slate-950 rounded-xl border border-slate-800 p-2" />
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>Format didukung: JPG, PNG, WEBP (Hasil tangkapan layar HP/Laptop)</span>
+              <button id="resetTodaySsBtn" type="button" class="text-rose-400 hover:text-rose-300 font-semibold underline">Hapus SS Hari Ini</button>
             </div>
           </div>
 
-          <!-- Quick Log Activity Note for Monev -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Catatan Aktivitas Monev Hari Ini</h4>
-              <span class="text-[11px] text-emerald-600 font-medium" id="noteSavedIndicator">Tersimpan otomatis</span>
+          <div class="md:col-span-5 bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-center min-h-[110px]">
+            <div id="todaySsEmptyState" class="text-center text-xs text-slate-500">
+              Belum ada tangkapan layar (SS) yang diunggah hari ini.
             </div>
-            <textarea id="dailyMonevNote" rows="2" placeholder="Tulis ringkasan kegiatan magang hari ini untuk disalin ke laporan Monev..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-            <div class="flex justify-end">
-              <button id="copyNoteBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
-                Salin Catatan Monev
-              </button>
+            <div id="todaySsPreviewContainer" class="hidden w-full flex items-center gap-3">
+              <img id="todaySsThumb" src="" alt="Bukti SS Hari Ini" class="w-20 h-20 object-cover rounded-lg border border-emerald-500 shrink-0" />
+              <div class="min-w-0 flex-1">
+                <div class="text-xs font-bold text-emerald-400 truncate" id="todaySsName">bukti_monev.png</div>
+                <div class="text-[11px] text-slate-400 mt-0.5" id="todaySsTime">Diunggah pukul --:--</div>
+                <span class="inline-block mt-1.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">✓ Alarm Malam Ini Aman</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: INTEGRASI BOT WA OTOMATIS (24/7 BACKGROUND) -->
-    <section id="viewWaBot" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 space-y-5">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-100 pb-4">
-          <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Berjalan 24/7 Tanpa Buka Browser</span>
-            <h2 class="text-lg font-bold text-slate-900 mt-2">Generator Script Bot Pengingat WhatsApp Otomatis</h2>
-            <p class="text-xs text-slate-500 mt-0.5">
-              Agar WhatsApp Anda tetap dihubungi tepat pukul <strong>12:00</strong>, <strong>15:30</strong>, dan <strong>20:00</strong> meskipun laptop/HP dalam keadaan layar mati, gunakan salah satu dari 2 metode gratis di bawah ini. Nomor & pesan Anda sudah terisi otomatis di dalam kode!
-            </p>
-          </div>
-          <div class="flex gap-2 shrink-0">
-            <button id="modeBtnAppsScript" type="button" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm">
-              1. Google Apps Script (Cloud Gratis 24/7)
-            </button>
-            <button id="modeBtnNodeJs" type="button" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
-              2. Node.js Bot (Scan QR WA Sendiri)
-            </button>
-          </div>
-        </div>
-
-        <!-- Method 1: Google Apps Script + Fonnte -->
-        <div id="panelAppsScript" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="font-bold text-slate-900 mb-1">Langkah 1: Daftar Token Gratis</div>
-              <p class="text-slate-600">Buat akun gratis di <a href="https://fonnte.com" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline font-medium">fonnte.com</a>, hubungkan WA Anda, lalu salin <strong>API Token</strong> perangkat.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="font-bold text-slate-900 mb-1">Langkah 2: Buka Google Apps Script</div>
-              <p class="text-slate-600">Buka <a href="https://script.google.com" target="_blank" rel="noopener noreferrer" class="text-emerald-600 underline font-medium">script.google.com</a>, klik <strong>Proyek Baru</strong>, lalu tempel kode di bawah ini.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="font-bold text-slate-900 mb-1">Langkah 3: Jalankan <code class="bg-slate-200 px-1 rounded">pasangTriggerJadwal()</code></div>
-              <p class="text-slate-600">Pilih fungsi <code class="bg-slate-200 px-1 rounded">pasangTriggerJadwal</code> lalu klik <strong>Run</strong> sekali saja. Google Cloud akan mengirim WA tiap 12:00, 15:30, dan 20:00!</p>
-            </div>
-          </div>
-
-          <div class="relative">
-            <div class="flex items-center justify-between bg-slate-800 text-slate-200 px-4 py-2.5 rounded-t-xl text-xs">
-              <span class="font-mono font-semibold">Kode.gs (Google Apps Script — 12:00, 15:30, 20:00 WIB)</span>
-              <button id="copyAppsScriptBtn" type="button" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition">
-                Salin Kode Apps Script
-              </button>
-            </div>
-            <pre id="codeAppsScript" class="bg-slate-900 text-emerald-300 p-4 rounded-b-xl text-xs font-mono overflow-x-auto leading-relaxed"></pre>
-          </div>
-        </div>
-
-        <!-- Method 2: Node.js whatsapp-web.js + node-cron -->
-        <div id="panelNodeJs" class="hidden space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="font-bold text-slate-900 mb-1">Tanpa Pihak Ketiga (100% Gratis)</div>
-              <p class="text-slate-600">Menggunakan <code class="bg-slate-200 px-1 rounded">whatsapp-web.js</code> dan <code class="bg-slate-200 px-1 rounded">node-cron</code> untuk mengirim pesan langsung ke nomor Anda sendiri.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="font-bold text-slate-900 mb-1">Cara Install Cepat</div>
-              <p class="text-slate-600">Jalankan <code class="bg-slate-200 px-1 rounded">npm init -y && npm i whatsapp-web.js qrcode-terminal node-cron</code> di folder proyek Anda.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="font-bold text-slate-900 mb-1">Cron Expression Terpasang</div>
-              <p class="text-slate-600">Siang: <code class="bg-slate-200 px-1 rounded">0 12 * * *</code> • Sore: <code class="bg-slate-200 px-1 rounded">30 15 * * *</code> • Malam: <code class="bg-slate-200 px-1 rounded">0 20 * * *</code></p>
-            </div>
-          </div>
-
-          <div class="relative">
-            <div class="flex items-center justify-between bg-slate-800 text-slate-200 px-4 py-2.5 rounded-t-xl text-xs">
-              <span class="font-mono font-semibold">bot_monev_wa.js (Node.js + node-cron)</span>
-              <button id="copyNodeJsBtn" type="button" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition">
-                Salin Kode Node.js
-              </button>
-            </div>
-            <pre id="codeNodeJs" class="bg-slate-900 text-emerald-300 p-4 rounded-b-xl text-xs font-mono overflow-x-auto leading-relaxed"></pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: RIWAYAT & REKAP MONEV -->
+    <!-- TAB 2: GALERI RIWAYAT BUKTI SS -->
     <section id="viewHistory" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-4">
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-800 pb-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">Riwayat & Log Kepatuhan Presensi Monev</h2>
-            <p class="text-xs text-slate-500">Rekap pencatatan sesi Siang (12:00), Sore (15:30), dan Malam (20:00)</p>
+            <h2 class="text-lg font-bold text-white">Galeri & Riwayat Bukti Screenshot (SS) Monev</h2>
+            <p class="text-xs text-slate-400">Rekap harian pengisian Monev pukul 20:00 & 22:00 beserta bukti gambar SS</p>
           </div>
-          <div class="flex items-center gap-2">
-            <button id="exportHistoryBtn" type="button" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">
-              Salin Rekap ke Clipboard
-            </button>
-            <button id="clearHistoryBtn" type="button" class="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition">
-              Reset Riwayat Hari Ini
-            </button>
-          </div>
+          <button id="exportHistoryBtn" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition self-start sm:self-center">
+            Salin Rekap Log ke Clipboard
+          </button>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse text-xs">
             <thead>
-              <tr class="bg-slate-50 text-slate-600 border-b border-slate-200">
+              <tr class="bg-slate-950 text-slate-400 border-b border-slate-800">
                 <th class="py-3 px-4 font-bold">Tanggal</th>
-                <th class="py-3 px-4 font-bold">Sesi 1 (12:00 Siang)</th>
-                <th class="py-3 px-4 font-bold">Sesi 2 (15:30 Sore)</th>
-                <th class="py-3 px-4 font-bold">Sesi 3 (20:00 Malam)</th>
-                <th class="py-3 px-4 font-bold">Catatan Aktivitas Monev</th>
+                <th class="py-3 px-4 font-bold">Alarm 20:00 WIB</th>
+                <th class="py-3 px-4 font-bold">Alarm 22:00 WIB</th>
+                <th class="py-3 px-4 font-bold">Nama File Bukti SS</th>
+                <th class="py-3 px-4 font-bold">Pratinjau SS</th>
               </tr>
             </thead>
-            <tbody id="historyTableBody" class="divide-y divide-slate-100">
+            <tbody id="historyTableBody" class="divide-y divide-slate-800/80">
               <!-- Populated dynamically -->
             </tbody>
           </table>
@@ -392,104 +259,57 @@
       </div>
     </section>
 
-    <!-- TAB 4: VERSI ANDROID (.APK & PWA) -->
+    <!-- TAB 3: BUAT .APK VIA GITHUB ACTIONS -->
     <section id="viewApk" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 space-y-5">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-100 pb-4">
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800 pb-4">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Nomor Terpasang: +62895394853580</span>
-            <h2 class="text-lg font-bold text-slate-900 mt-2">Pasang Aplikasi di HP Android (.APK & Web App)</h2>
-            <p class="text-xs text-slate-500 mt-0.5">
-              Nomor WhatsApp Anda (<strong>62895394853580</strong>) dan jadwal alarm (<strong>12:00 Siang</strong>, <strong>15:30 Sore</strong>, <strong>20:00 Malam</strong>) sudah ditanam secara permanen di dalam paket aplikasi ini.
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-300 bg-amber-500/20 px-2.5 py-1 rounded-full">Versi Revisi • Alarm 20:00 & 22:00 Wajib SS</span>
+            <h2 class="text-lg font-bold text-white mt-2">Panduan Membuat File .APK di Repositori GitHub Anda</h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Kode <code class="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">build-apk.yml</code> di bawah ini sudah dilengkapi fitur <strong>pemilih gambar Galeri Android (<code class="font-mono">onShowFileChooser</code>)</strong> agar Anda bisa mengunggah Screenshot (SS) langsung di dalam aplikasi <code class="bg-slate-800 px-1 rounded">.apk</code> untuk mematikan alarm pukul 20:00 dan 22:00.
             </p>
           </div>
           <div class="flex flex-wrap gap-2 shrink-0">
-            <button id="installPwaBtn" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              Pasang Langsung ke Layar Utama HP
+            <button id="downloadHtmlAppBtn" type="button" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold shadow-sm transition">
+              1. Unduh File index.html Ini
             </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Cara 1: Buat File .APK Instan dari File HTML -->
-          <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between space-y-3">
-            <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider bg-emerald-600 text-white px-2.5 py-0.5 rounded-full">Cara 1 • Paling Cepat (1 Menit)</span>
-              <h3 class="text-sm font-bold text-slate-900 mt-2">Konversi ke File .APK Siap Install</h3>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                Ubah file aplikasi ini menjadi file <strong>.apk</strong> Android tanpa perlu koding:
-              </p>
-              <ol class="text-xs text-slate-700 mt-2 space-y-1.5 list-decimal list-inside">
-                <li>Unduh file proyek <strong>MonevMagangHub_Android_APK_Project.zip</strong> di chat.</li>
-                <li>Buka <a href="https://www.webintoapp.com/html-to-app" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-semibold underline">WebIntoApp.com (HTML to APK)</a>.</li>
-                <li>Unggah file <code class="bg-white px-1 rounded border">index.html</code> dari dalam ZIP, beri nama <strong>Monev Reminder</strong>, lalu klik <strong>Make App (.APK)</strong>.</li>
-              </ol>
-            </div>
-            <a href="https://www.webintoapp.com/html-to-app" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold text-center transition">
-              Buka Konverter HTML ke .APK
-            </a>
-          </div>
-
-          <!-- Cara 2: Build Native APK Otomatis via GitHub Actions / Android Studio -->
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-3">
-            <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider bg-slate-800 text-white px-2.5 py-0.5 rounded-full">Cara 2 • Native AlarmManager .APK</span>
-              <h3 class="text-sm font-bold text-slate-900 mt-2">Source Code Android Studio + Auto-Build</h3>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                Di dalam file ZIP yang disertakan, sudah tersedia proyek Android lengkap (<code class="bg-white px-1 rounded border">MainActivity.java</code>, <code class="bg-white px-1 rounded border">AlarmReceiver.java</code>, & <code class="bg-white px-1 rounded border">AndroidManifest.xml</code>):
-              </p>
-              <ul class="text-xs text-slate-700 mt-2 space-y-1.5 list-disc list-inside">
-                <li>Bisa langsung dibuka & di-build menjadi <strong>.apk</strong> di <strong>Android Studio</strong> (<code class="bg-white px-1 rounded">Build &gt; Build APK</code>).</li>
-                <li>Atau unggah ke GitHub: file <code class="bg-white px-1 rounded">build-apk.yml</code> akan meng-compile file <strong>.apk</strong> secara otomatis di cloud GitHub Actions.</li>
-              </ul>
-            </div>
-            <button id="copyGradleCmdBtn" type="button" class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition">
-              Salin Perintah Build APK (./gradlew assembleDebug)
+            <button id="downloadGithubYmlBtn" type="button" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-bold shadow-sm transition">
+              2. Unduh File build-apk.yml
             </button>
-          </div>
-
-          <!-- Cara 3: Pasang Instan Tanpa File APK (PWA Android) -->
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-3">
-            <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider bg-sky-600 text-white px-2.5 py-0.5 rounded-full">Cara 3 • Tanpa Compile</span>
-              <h3 class="text-sm font-bold text-slate-900 mt-2">Pasang sebagai Aplikasi Web Android (PWA)</h3>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                Jika dibuka di <strong>Google Chrome HP Android</strong>:
-              </p>
-              <ol class="text-xs text-slate-700 mt-2 space-y-1.5 list-decimal list-inside">
-                <li>Ketuk ikon titik tiga (<strong>⋮</strong>) di pojok kanan atas Chrome.</li>
-                <li>Pilih <strong>Tambahkan ke Layar Utama (Add to Home Screen / Install App)</strong>.</li>
-                <li>Aplikasi akan tampil penuh seperti APK native dengan nomor <strong>62895394853580</strong> siap pakai.</li>
-              </ol>
-            </div>
-            <button id="testWaDirectApkBtn" type="button" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold transition">
-              Tes Kirim WA ke +62895394853580
-            </button>
-          </div>
-        </div>
-
-        <!-- Panduan Langkah Demi Langkah GitHub Actions (Tanpa Install Aplikasi Apa Pun) -->
-        <div class="mt-6 pt-5 border-t border-slate-200 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider bg-emerald-700 text-white px-2.5 py-0.5 rounded-full">Panduan GitHub Actions • Otomatis Jadi .APK di Cloud</span>
-              <h3 class="text-base font-bold text-slate-900 mt-1.5">4 Langkah Compile .APK di Repo GitHub Anda</h3>
-              <p class="text-xs text-slate-600 mt-0.5">
-                Anda bahkan <strong>tidak perlu mengekstrak ZIP</strong> jika mengunggah lewat browser! Cukup unggah file <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono">MonevMagangHub_Android_APK_Project.zip</code> ke repo GitHub Anda, lalu tempel kode workflow <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono">build-apk.yml</code> di bawah ini pada menu <strong>Actions</strong>.
-              </p>
-            </div>
-            <button id="copyGithubYmlBtn" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition shrink-0">
+            <button id="copyGithubYmlBtn" type="button" class="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm transition">
               Salin Kode build-apk.yml
             </button>
           </div>
+        </div>
 
-          <div class="relative">
-            <div class="flex items-center justify-between bg-slate-800 text-slate-200 px-4 py-2 rounded-t-xl text-xs">
-              <span class="font-mono font-semibold">.github/workflows/build-apk.yml (Otomatis Ekstrak ZIP &amp; Compile APK)</span>
-              <span class="text-[11px] text-emerald-300">Ubuntu Cloud • JDK 17 + Android SDK</span>
-            </div>
-            <pre id="codeGithubYml" class="bg-slate-900 text-emerald-300 p-4 rounded-b-xl text-xs font-mono overflow-x-auto max-h-72 leading-relaxed">name: Build Monev Reminder APK
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+            <div class="font-extrabold text-amber-400">Langkah 1: Unggah HTML Baru ke Repo</div>
+            <p class="text-slate-300 leading-relaxed">
+              Klik tombol <strong>1. Unduh File index.html Ini</strong> di atas, lalu unggah ke halaman utama repo <strong><code class="text-white">App-Monev-Magang</code></strong> Anda via <strong>Add file &gt; Upload files &gt; Commit changes</strong> (hapus file HTML versi lama jika masih ada).
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+            <div class="font-extrabold text-emerald-400">Langkah 2: Buat File <code class="font-mono">.github/workflows/build-apk.yml</code></div>
+            <p class="text-slate-300 leading-relaxed">
+              Di repo GitHub Anda, klik <strong>Add file &gt; Create new file</strong>, ketik nama file <strong class="text-white"><code class="font-mono">.github/workflows/build-apk.yml</code></strong>, lalu tempel kode YAML di bawah ini dan klik <strong>Commit changes</strong>.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+            <div class="font-extrabold text-sky-400">Langkah 3: Unduh APK di Tab Actions</div>
+            <p class="text-slate-300 leading-relaxed">
+              Buka tab <strong>Actions</strong> di GitHub, tunggu <strong>~25 detik</strong> sampai centang hijau (<strong>✓</strong>), klik judul prosesnya, lalu unduh <strong><code class="text-white">APK-AlarmMonev-WajibSS-20-22</code></strong> di bagian <strong>Artifacts</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="flex items-center justify-between bg-slate-950 text-slate-300 px-4 py-2.5 rounded-t-xl border border-b-0 border-slate-800 text-xs">
+            <span class="font-mono font-semibold">.github/workflows/build-apk.yml (Alarm 20:00 & 22:00 + Pemilih Galeri SS Android)</span>
+            <span class="text-[11px] text-emerald-400">Siap Compile Otomatis</span>
+          </div>
+          <pre id="codeGithubYml" class="bg-black text-emerald-300 p-4 rounded-b-xl border border-slate-800 text-xs font-mono overflow-x-auto max-h-80 leading-relaxed">name: Build Monev Alarm APK (20.00 &amp; 22.00 - Wajib SS)
 
 on:
   push:
@@ -500,13 +320,16 @@ jobs:
   build-apk:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Generate &amp; Compile Native Android APK
+      - name: Generate &amp; Compile Native Android Alarm APK
         run: |
           set -e
           rm -rf build_apk
@@ -519,8 +342,8 @@ jobs:
           &lt;?xml version="1.0" encoding="utf-8"?&gt;
           &lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
               package="id.maganghub.monevreminder"
-              android:versionCode="1"
-              android:versionName="1.0.0"&gt;
+              android:versionCode="2"
+              android:versionName="2.0.0"&gt;
 
               &lt;uses-sdk android:minSdkVersion="24" android:targetSdkVersion="33" /&gt;
 
@@ -530,10 +353,11 @@ jobs:
               &lt;uses-permission android:name="android.permission.USE_EXACT_ALARM" /&gt;
               &lt;uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /&gt;
               &lt;uses-permission android:name="android.permission.VIBRATE" /&gt;
+              &lt;uses-permission android:name="android.permission.WAKE_LOCK" /&gt;
 
               &lt;application
                   android:allowBackup="true"
-                  android:label="Monev MagangHub Reminder"
+                  android:label="Alarm Monev (Wajib SS)"
                   android:icon="@android:drawable/ic_lock_idle_alarm"
                   android:supportsRtl="true"
                   android:usesCleartextTraffic="true"
@@ -542,6 +366,8 @@ jobs:
                   &lt;activity
                       android:name="id.maganghub.monevreminder.MainActivity"
                       android:exported="true"
+                      android:showWhenLocked="true"
+                      android:turnScreenOn="true"
                       android:configChanges="orientation|screenSize|keyboardHidden"&gt;
                       &lt;intent-filter&gt;
                           &lt;action android:name="android.intent.action.MAIN" /&gt;
@@ -575,6 +401,9 @@ jobs:
           import android.net.Uri;
           import android.os.Build;
           import android.os.Bundle;
+          import android.view.WindowManager;
+          import android.webkit.ValueCallback;
+          import android.webkit.WebChromeClient;
           import android.webkit.WebResourceRequest;
           import android.webkit.WebSettings;
           import android.webkit.WebView;
@@ -583,19 +412,31 @@ jobs:
 
           public class MainActivity extends Activity {
               private WebView webView;
-              public static final String TARGET_WA = "62895394853580";
+              private ValueCallback&lt;Uri[]&gt; filePathCallback;
+              private static final int FILE_CHOOSER_RESULT_CODE = 2001;
 
               @Override
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
+
+                  getWindow().addFlags(
+                      WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                      WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                  );
+
                   if (Build.VERSION.SDK_INT &gt;= 33) {
                       requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 100);
                   }
+
                   webView = new WebView(this);
                   setContentView(webView);
+
                   WebSettings settings = webView.getSettings();
                   settings.setJavaScriptEnabled(true);
                   settings.setDomStorageEnabled(true);
+                  settings.setAllowFileAccess(true);
+                  settings.setMediaPlaybackRequiresUserGesture(false);
+
                   webView.setWebViewClient(new WebViewClient() {
                       @Override
                       public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -607,28 +448,72 @@ jobs:
                           return handleUrl(url);
                       }
                       private boolean handleUrl(String url) {
-                          if (url.startsWith("https://wa.me/") || url.startsWith("whatsapp://") || url.contains("maganghub.kemnaker.go.id")) {
+                          if (url.contains("maganghub.kemnaker.go.id") || url.startsWith("https://wa.me/")) {
                               startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                               return true;
                           }
                           return false;
                       }
                   });
+
+                  // Mendukung pemilih file gambar (Screenshot / SS) dari Galeri HP Android
+                  webView.setWebChromeClient(new WebChromeClient() {
+                      @Override
+                      public boolean onShowFileChooser(WebView webView, ValueCallback&lt;Uri[]&gt; filePathCallback, FileChooserParams fileChooserParams) {
+                          if (MainActivity.this.filePathCallback != null) {
+                              MainActivity.this.filePathCallback.onReceiveValue(null);
+                          }
+                          MainActivity.this.filePathCallback = filePathCallback;
+                          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                          intent.addCategory(Intent.CATEGORY_OPENABLE);
+                          intent.setType("image/*");
+                          startActivityForResult(Intent.createChooser(intent, "Pilih Screenshot (SS) Bukti Monev"), FILE_CHOOSER_RESULT_CODE);
+                          return true;
+                      }
+                  });
+
                   scheduleAllDailyAlarms(this);
-                  webView.loadUrl("file:///android_asset/index.html");
+
+                  boolean ringNow = getIntent() != null &amp;&amp; getIntent().getBooleanExtra("RING_ALARM", false);
+                  String slot = getIntent() != null ? getIntent().getStringExtra("SLOT_ID") : "";
+                  if (ringNow) {
+                      webView.loadUrl("file:///android_asset/index.html?ring=1&amp;slot=" + (slot != null ? slot : "malam_2000"));
+                  } else {
+                      webView.loadUrl("file:///android_asset/index.html");
+                  }
+              }
+
+              @Override
+              protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+                  if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+                      if (filePathCallback == null) return;
+                      Uri[] results = null;
+                      if (resultCode == Activity.RESULT_OK &amp;&amp; data != null &amp;&amp; data.getDataString() != null) {
+                          results = new Uri[]{Uri.parse(data.getDataString())};
+                      }
+                      filePathCallback.onReceiveValue(results);
+                      filePathCallback = null;
+                  } else {
+                      super.onActivityResult(requestCode, resultCode, data);
+                  }
+              }
+
+              @Override
+              public void onBackPressed() {
+                  // Cegah tombol Back menutup aplikasi saat alarm berbunyi
               }
 
               public static void scheduleAllDailyAlarms(Context context) {
-                  scheduleDaily(context, 101, 12, 0, "Sesi Siang (12:00 WIB)");
-                  scheduleDaily(context, 102, 15, 30, "Sesi Sore (15:30 WIB)");
-                  scheduleDaily(context, 103, 20, 0, "Sesi Malam (20:00 WIB)");
+                  scheduleDaily(context, 201, 20, 0, "malam_2000", "Alarm Monev 20:00 WIB");
+                  scheduleDaily(context, 202, 22, 0, "malam_2200", "Alarm Monev 22:00 WIB");
               }
 
-              private static void scheduleDaily(Context context, int requestCode, int hour, int minute, String sessionLabel) {
+              private static void scheduleDaily(Context context, int requestCode, int hour, int minute, String slotId, String label) {
                   AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                   if (am == null) return;
                   Intent intent = new Intent(context, AlarmReceiver.class);
-                  intent.putExtra("SESSION_LABEL", sessionLabel);
+                  intent.putExtra("SLOT_ID", slotId);
+                  intent.putExtra("SESSION_LABEL", label);
                   PendingIntent pi = PendingIntent.getBroadcast(
                       context, requestCode, intent,
                       PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
@@ -655,23 +540,32 @@ jobs:
           import android.content.BroadcastReceiver;
           import android.content.Context;
           import android.content.Intent;
-          import android.net.Uri;
           import android.os.Build;
 
           public class AlarmReceiver extends BroadcastReceiver {
-              private static final String CHANNEL_ID = "monev_maganghub_channel";
+              private static final String CHANNEL_ID = "monev_strict_alarm_channel";
 
               @Override
               public void onReceive(Context context, Intent intent) {
+                  String slotId = intent.getStringExtra("SLOT_ID");
                   String sessionLabel = intent.getStringExtra("SESSION_LABEL");
-                  if (sessionLabel == null) sessionLabel = "Jadwal Presensi";
-                  String phone = "62895394853580";
+                  if (sessionLabel == null) sessionLabel = "Alarm Monev (20:00 / 22:00)";
+
+                  Intent launchIntent = new Intent(context, MainActivity.class);
+                  launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                  launchIntent.putExtra("RING_ALARM", true);
+                  launchIntent.putExtra("SLOT_ID", slotId != null ? slotId : "malam_2000");
+
+                  PendingIntent pi = PendingIntent.getActivity(
+                      context, (int) System.currentTimeMillis(), launchIntent,
+                      PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                  );
 
                   NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                   Notification.Builder builder;
                   if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O &amp;&amp; nm != null) {
                       NotificationChannel channel = new NotificationChannel(
-                          CHANNEL_ID, "Pengingat Presensi Monev MagangHub", NotificationManager.IMPORTANCE_HIGH
+                          CHANNEL_ID, "Alarm Wajib SS Monev MagangHub", NotificationManager.IMPORTANCE_HIGH
                       );
                       nm.createNotificationChannel(channel);
                       builder = new Notification.Builder(context, CHANNEL_ID);
@@ -679,22 +573,20 @@ jobs:
                       builder = new Notification.Builder(context);
                   }
 
-                  String msg = "Halo! Waktunya mengisi presensi Monev MagangHub (" + sessionLabel + "). Link: https://maganghub.kemnaker.go.id";
-                  String waUrl = "https://wa.me/" + phone + "?text=" + Uri.encode(msg);
-                  Intent waIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(waUrl));
-                  PendingIntent pi = PendingIntent.getActivity(
-                      context, (int) System.currentTimeMillis(), waIntent,
-                      PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-                  );
-
                   builder.setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-                         .setContentTitle("Waktunya Presensi Monev (" + sessionLabel + ")")
-                         .setContentText("Ketuk untuk kirim pengingat ke WhatsApp (+62895394853580)")
-                         .setAutoCancel(true)
+                         .setContentTitle("🚨 " + sessionLabel + " — WAJIB UPLOAD SS!")
+                         .setContentText("Alarm tidak akan berhenti sebelum Anda upload Screenshot bukti isi Monev!")
+                         .setOngoing(true)
+                         .setAutoCancel(false)
                          .setContentIntent(pi);
 
                   if (nm != null) {
-                      nm.notify((int) System.currentTimeMillis(), builder.build());
+                      nm.notify(999, builder.build());
+                  }
+
+                  try {
+                      context.startActivity(launchIntent);
+                  } catch (Exception ignored) {
                   }
               }
           }
@@ -717,105 +609,193 @@ jobs:
           }
           BOOT_JAVA_EOF
 
-          cat &lt;&lt; 'HTML_EOF' &gt; build_apk/assets/index.html
+          sed -i 's/^          //' build_apk/AndroidManifest.xml
+
+          cat &lt;&lt; 'APK_HTML_EOF' &gt; build_apk/assets/index.html
           &lt;!DOCTYPE html&gt;
           &lt;html lang="id"&gt;
           &lt;head&gt;
             &lt;meta charset="UTF-8"&gt;
             &lt;meta name="viewport" content="width=device-width,initial-scale=1.0"&gt;
-            &lt;title&gt;Monev MagangHub Reminder&lt;/title&gt;
+            &lt;title&gt;Alarm Monev 20:00 &amp; 22:00 (Wajib SS)&lt;/title&gt;
             &lt;style&gt;
               *{box-sizing:border-box}
-              body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f1f5f9;color:#0f172a;margin:0;padding:16px}
-              .header{background:linear-gradient(135deg,#059669,#0d9488);color:#fff;padding:20px;border-radius:18px;margin-bottom:16px;box-shadow:0 4px 12px rgba(5,150,105,0.25)}
-              .badge{display:inline-block;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700}
-              .clock-box{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.2);padding:12px 14px;border-radius:12px;margin-top:12px}
-              .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-              .card.done{border-color:#10b981;background:#ecfdf5}
+              body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#f8fafc;margin:0;padding:16px}
+              .header{background:linear-gradient(135deg,#991b1b,#dc2626,#ea580c);color:#fff;padding:20px;border-radius:18px;margin-bottom:16px;box-shadow:0 6px 20px rgba(220,38,38,0.35)}
+              .badge{display:inline-block;background:rgba(0,0,0,0.3);padding:4px 10px;border-radius:99px;font-size:11px;font-weight:800}
+              .clock-box{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.28);padding:12px 14px;border-radius:12px;margin-top:12px}
+              .card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:16px;margin-bottom:12px}
+              .card.done{border-color:#10b981;background:#064e3b}
               .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-              .time{font-size:26px;font-weight:800;color:#0f172a;margin:4px 0}
-              .desc{font-size:12px;color:#64748b;margin:0 0 12px 0}
-              .btn-row{display:flex;gap:8px}
-              .btn{flex:1;padding:11px 12px;border-radius:11px;text-decoration:none;font-weight:700;font-size:12px;border:none;cursor:pointer;text-align:center}
-              .btn-done{background:#059669;color:#fff}
-              .btn-wa{background:#e2e8f0;color:#1e293b}
-              .btn-portal{display:block;width:100%;background:#0f172a;color:#fff;padding:14px;border-radius:14px;text-align:center;text-decoration:none;font-weight:700;font-size:13px;margin-top:10px}
-              .status-pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;background:#fef3c7;color:#92400e}
-              .status-pill.ok{background:#d1fae5;color:#065f46}
-              textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font-size:12px;margin-top:8px}
+              .time{font-size:32px;font-weight:900;color:#fff;margin:6px 0}
+              .desc{font-size:12px;color:#cbd5e1;margin:0 0 12px 0;line-height:1.4}
+              .btn{display:block;width:100%;padding:12px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px;border:none;cursor:pointer;text-align:center}
+              .btn-red{background:#dc2626;color:#fff}
+              .btn-green{background:#059669;color:#fff}
+              .btn-dark{background:#334155;color:#fff;margin-top:10px}
+              .pill{font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px;background:rgba(245,158,11,0.2);color:#fcd34d}
+              .pill.ok{background:rgba(16,185,129,0.25);color:#6ee7b7}
+              #alarmOverlay{display:none;position:fixed;inset:0;z-index:999;padding:18px;background:#7f1d1d;overflow-y:auto;animation:flashBg 0.8s infinite alternate}
+              @keyframes flashBg{0%{background:#7f1d1d}100%{background:#0f172a}}
+              .modal-box{background:#0f172a;border:3px solid #ef4444;border-radius:22px;padding:20px;max-width:440px;margin:20px auto;color:#fff}
+              input[type=file]{width:100%;background:#020617;color:#e2e8f0;padding:10px;border-radius:12px;border:1px solid #475569;font-size:12px;margin:10px 0}
+              img.preview{max-height:160px;display:block;margin:10px auto;border-radius:10px;border:2px solid #10b981}
             &lt;/style&gt;
           &lt;/head&gt;
           &lt;body&gt;
             &lt;div class="header"&gt;
-              &lt;span class="badge"&gt;ALARM AKTIF • +62895394853580&lt;/span&gt;
-              &lt;h2 style="margin:8px 0 4px 0;font-size:20px"&gt;Monev MagangHub Reminder&lt;/h2&gt;
-              &lt;div style="font-size:12px;opacity:0.9"&gt;Jadwal Otomatis: 12:00 Siang • 15:30 Sore • 20:00 Malam&lt;/div&gt;
+              &lt;span class="badge"&gt;WAJIB UPLOAD SCREENSHOT (SS)&lt;/span&gt;
+              &lt;h2 style="margin:8px 0 4px 0;font-size:20px"&gt;Alarm Monev MagangHub&lt;/h2&gt;
+              &lt;div style="font-size:12px;opacity:0.9"&gt;Berbunyi pukul 20:00 &amp; 22:00 WIB • Tidak berhenti sebelum setor SS&lt;/div&gt;
               &lt;div class="clock-box"&gt;
                 &lt;div&gt;
                   &lt;div style="font-size:10px;opacity:0.8"&gt;WAKTU SEKARANG&lt;/div&gt;
-                  &lt;div id="clock" style="font-size:18px;font-weight:800"&gt;--:--:-- WIB&lt;/div&gt;
+                  &lt;div id="clock" style="font-size:18px;font-weight:900"&gt;--:--:-- WIB&lt;/div&gt;
                 &lt;/div&gt;
                 &lt;div style="text-align:right"&gt;
-                  &lt;div style="font-size:10px;opacity:0.8"&gt;JADWAL BERIKUTNYA&lt;/div&gt;
-                  &lt;div id="nextTimer" style="font-size:18px;font-weight:800;color:#fde68a"&gt;--:--:--&lt;/div&gt;
+                  &lt;div style="font-size:10px;opacity:0.8"&gt;ALARM BERIKUTNYA&lt;/div&gt;
+                  &lt;div id="nextTimer" style="font-size:18px;font-weight:900;color:#fde68a"&gt;--:--:--&lt;/div&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
             &lt;/div&gt;
 
-            &lt;div id="cardsContainer"&gt;&lt;/div&gt;
+            &lt;button class="btn btn-red" style="margin-bottom:12px" onclick="startAlarm('Alarm Tes (Wajib SS)')"&gt;
+              🔊 Tes Bunyi Sirine &amp; Kunci SS Sekarang
+            &lt;/button&gt;
+
+            &lt;div id="cards"&gt;&lt;/div&gt;
 
             &lt;div class="card"&gt;
-              &lt;strong style="font-size:13px"&gt;Catatan Aktivitas Monev Hari Ini&lt;/strong&gt;
-              &lt;textarea id="noteBox" rows="2" placeholder="Tulis ringkasan kegiatan magang hari ini..."&gt;&lt;/textarea&gt;
+              &lt;strong style="font-size:13px"&gt;Setor Bukti SS Lebih Awal (Sebelum 20:00)&lt;/strong&gt;
+              &lt;p class="desc" style="margin-top:4px"&gt;Jika sudah isi Monev sore/malam ini, unggah SS di bawah agar alarm 20:00 &amp; 22:00 otomatis nonaktif hari ini:&lt;/p&gt;
+              &lt;input type="file" id="earlyFile" accept="image/*" onchange="handleEarlyUpload(this)"&gt;
+              &lt;div id="earlyStatus" style="font-size:12px;color:#fcd34d;font-weight:700"&gt;Belum ada SS hari ini&lt;/div&gt;
+              &lt;img id="earlyImg" class="preview" style="display:none" alt="Bukti SS"&gt;
             &lt;/div&gt;
 
-            &lt;a class="btn-portal" href="https://maganghub.kemnaker.go.id"&gt;Buka Portal Monev MagangHub&lt;/a&gt;
+            &lt;a class="btn btn-dark" href="https://maganghub.kemnaker.go.id"&gt;Buka Portal Monev MagangHub ↗&lt;/a&gt;
+
+            &lt;div id="alarmOverlay"&gt;
+              &lt;div class="modal-box"&gt;
+                &lt;div style="background:#dc2626;display:inline-block;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:900"&gt;SIRINE AKTIF • TIDAK BISA DITUTUP&lt;/div&gt;
+                &lt;h2 id="alarmTitle" style="margin:10px 0 6px 0;font-size:20px"&gt;WAKTUNYA ISI MONEV!&lt;/h2&gt;
+                &lt;p class="desc"&gt;Alarm ini akan terus berbunyi tanpa henti sampai Anda memilih gambar Screenshot (SS) bukti pengisian Monev.&lt;/p&gt;
+                &lt;a class="btn btn-dark" style="margin-bottom:12px;background:#f59e0b;color:#000" href="https://maganghub.kemnaker.go.id"&gt;1. Buka Web Monev &amp; Ambil SS ↗&lt;/a&gt;
+                &lt;label style="font-size:12px;font-weight:800;color:#fde68a"&gt;2. Pilih Gambar Screenshot (SS) Bukti Monev:&lt;/label&gt;
+                &lt;input type="file" id="modalFile" accept="image/*" onchange="handleModalUpload(this)"&gt;
+                &lt;img id="modalImg" class="preview" style="display:none" alt="Preview SS"&gt;
+                &lt;button id="stopBtn" class="btn" style="background:#334155;color:#94a3b8;margin-top:10px" disabled onclick="stopAlarmWithProof()"&gt;
+                  🔒 PILIH GAMBAR SS DULU UNTUK MEMATIKAN ALARM
+                &lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
 
             &lt;script&gt;
-              const PHONE = "62895394853580";
               const SLOTS = [
-                {id:"s1", label:"Sesi Siang", time:"12:00", h:12, m:0, desc:"Pengingat presensi &amp; cek progres tengah hari"},
-                {id:"s2", label:"Sesi Sore (Setengah 4)", time:"15:30", h:15, m:30, desc:"Pengingat presensi &amp; pengisian log harian sore"},
-                {id:"s3", label:"Sesi Malam (Jam 8)", time:"20:00", h:20, m:0, desc:"Evaluasi akhir &amp; kelengkapan presensi malam"}
+                {id:"malam_2000", label:"Alarm Utama • 20:00 WIB", time:"20:00", h:20, m:0, desc:"Berbunyi pukul 8 malam. Hanya berhenti setelah Anda mengunggah SS bukti Monev."},
+                {id:"malam_2200", label:"Alarm Terakhir • 22:00 WIB", time:"22:00", h:22, m:0, desc:"Berbunyi pukul 10 malam jika pukul 20:00 belum setor SS bukti Monev."}
               ];
+              let sirenTimer = null, audioCtx = null, tempSs = null, fired = {};
               function todayKey(){return new Date().toISOString().slice(0,10);}
-              function getState(){
-                try{return JSON.parse(localStorage.getItem("monev_apk_"+todayKey())||"{}");}catch(e){return {};}
+              function getLog(){try{return JSON.parse(localStorage.getItem("monev_ss_"+todayKey())||"{}");}catch(e){return {};}}
+              function saveLog(d){try{localStorage.setItem("monev_ss_"+todayKey(),JSON.stringify(d));}catch(e){}}
+              function beep(){
+                try{
+                  const C = window.AudioContext || window.webkitAudioContext;
+                  if(!C) return;
+                  if(!audioCtx) audioCtx = new C();
+                  if(audioCtx.state === 'suspended') audioCtx.resume();
+                  const now = audioCtx.currentTime;
+                  [880, 1174, 880, 1318].forEach((f,i)=&gt;{
+                    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                    o.type = 'sawtooth';
+                    o.frequency.setValueAtTime(f, now + i*0.2);
+                    g.gain.setValueAtTime(0.28, now + i*0.2);
+                    g.gain.exponentialRampToValueAtTime(0.01, now + i*0.2 + 0.18);
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.start(now + i*0.2); o.stop(now + i*0.2 + 0.19);
+                  });
+                  if(navigator.vibrate) navigator.vibrate([400,150,400]);
+                }catch(e){}
               }
-              function setState(st){
-                try{localStorage.setItem("monev_apk_"+todayKey(),JSON.stringify(st));}catch(e){}
+              function startAlarm(title){
+                tempSs = null;
+                document.getElementById("alarmTitle").textContent = title || "WAKTUNYA ISI MONEV!";
+                document.getElementById("modalFile").value = "";
+                document.getElementById("modalImg").style.display = "none";
+                const btn = document.getElementById("stopBtn");
+                btn.disabled = true;
+                btn.style.background = "#334155";
+                btn.style.color = "#94a3b8";
+                btn.textContent = "🔒 PILIH GAMBAR SS DULU UNTUK MEMATIKAN ALARM";
+                document.getElementById("alarmOverlay").style.display = "block";
+                if(sirenTimer) clearInterval(sirenTimer);
+                beep();
+                sirenTimer = setInterval(beep, 1000);
               }
-              function toggleSlot(id){
-                const st = getState();
-                st[id] = !st[id];
-                setState(st);
-                renderCards();
+              function handleModalUpload(input){
+                const f = input.files &amp;&amp; input.files[0];
+                if(!f) return;
+                const r = new FileReader();
+                r.onload = (e) =&gt; {
+                  tempSs = {name: f.name, time: new Date().toTimeString().slice(0,5)+" WIB", data: e.target.result};
+                  const img = document.getElementById("modalImg");
+                  img.src = tempSs.data;
+                  img.style.display = "block";
+                  const btn = document.getElementById("stopBtn");
+                  btn.disabled = false;
+                  btn.style.background = "#059669";
+                  btn.style.color = "#fff";
+                  btn.textContent = "✅ SS VALID — MATIKAN ALARM SEKARANG";
+                };
+                r.readAsDataURL(f);
               }
-              function renderCards(){
-                const st = getState();
-                const html = SLOTS.map(s =&gt; {
-                  const done = !!st[s.id];
-                  const msg = encodeURIComponent("Halo! Pengingat Presensi Monev MagangHub ("+s.label+" - "+s.time+" WIB). Jangan lupa isi presensi di https://maganghub.kemnaker.go.id");
-                  return `&lt;div class="card ${done?'done':''}"&gt;
+              function stopAlarmWithProof(){
+                if(!tempSs) return;
+                if(sirenTimer){ clearInterval(sirenTimer); sirenTimer = null; }
+                saveLog(tempSs);
+                document.getElementById("alarmOverlay").style.display = "none";
+                renderUI();
+              }
+              function handleEarlyUpload(input){
+                const f = input.files &amp;&amp; input.files[0];
+                if(!f) return;
+                const r = new FileReader();
+                r.onload = (e) =&gt; {
+                  saveLog({name: f.name, time: new Date().toTimeString().slice(0,5)+" WIB", data: e.target.result});
+                  renderUI();
+                };
+                r.readAsDataURL(f);
+              }
+              function renderUI(){
+                const log = getLog();
+                const hasSs = !!log.data;
+                const st = document.getElementById("earlyStatus");
+                const eImg = document.getElementById("earlyImg");
+                if(hasSs){
+                  st.style.color = "#6ee7b7";
+                  st.textContent = "✓ Bukti SS tersimpan (" + log.name + " pukul " + log.time + ") — Alarm malam ini aman!";
+                  eImg.src = log.data;
+                  eImg.style.display = "block";
+                } else {
+                  st.style.color = "#fcd34d";
+                  st.textContent = "Belum ada SS hari ini — Alarm 20:00 &amp; 22:00 Siaga";
+                  eImg.style.display = "none";
+                }
+                document.getElementById("cards").innerHTML = SLOTS.map(s =&gt; `
+                  &lt;div class="card ${hasSs?'done':''}"&gt;
                     &lt;div class="row"&gt;
                       &lt;strong style="font-size:13px"&gt;${s.label}&lt;/strong&gt;
-                      &lt;span class="status-pill ${done?'ok':''}"&gt;${done?'✓ Sudah Isi':'Belum Isi'}&lt;/span&gt;
+                      &lt;span class="pill ${hasSs?'ok':''}"&gt;${hasSs?'✓ Selesai ('+log.time+')':'⏰ Wajib SS'}&lt;/span&gt;
                     &lt;/div&gt;
-                    &lt;div class="time"&gt;${s.time} &lt;span style="font-size:12px;font-weight:600;color:#64748b"&gt;WIB&lt;/span&gt;&lt;/div&gt;
+                    &lt;div class="time"&gt;${s.time} &lt;span style="font-size:13px;color:#94a3b8"&gt;WIB&lt;/span&gt;&lt;/div&gt;
                     &lt;p class="desc"&gt;${s.desc}&lt;/p&gt;
-                    &lt;div class="btn-row"&gt;
-                      &lt;button class="btn btn-done" onclick="toggleSlot('${s.id}')"&gt;${done?'Batalkan Status':'Tandai Sudah Isi'}&lt;/button&gt;
-                      &lt;a class="btn btn-wa" href="https://wa.me/${PHONE}?text=${msg}"&gt;Kirim WA&lt;/a&gt;
-                    &lt;/div&gt;
-                  &lt;/div&gt;`;
-                }).join("");
-                document.getElementById("cardsContainer").innerHTML = html;
+                    &lt;button class="btn ${hasSs?'btn-green':'btn-red'}" onclick="startAlarm('${s.label}')"&gt;
+                      ${hasSs?'Tes Ulang Alarm ' + s.time:'Bunyikan &amp; Setor SS (' + s.time + ')'}
+                    &lt;/button&gt;
+                  &lt;/div&gt;
+                `).join("");
               }
-              const noteEl = document.getElementById("noteBox");
-              try{noteEl.value = localStorage.getItem("monev_note_"+todayKey())||"";}catch(e){}
-              noteEl.addEventListener("input", ()=&gt;{
-                try{localStorage.setItem("monev_note_"+todayKey(), noteEl.value);}catch(e){}
-              });
               function tick(){
                 const now = new Date();
                 document.getElementById("clock").textContent = now.toTimeString().slice(0,8) + " WIB";
@@ -826,6 +806,13 @@ jobs:
                   if(t &lt;= now) t.setDate(t.getDate() + 1);
                   const diff = t - now;
                   if(diff &lt; minDiff){ minDiff = diff; nextTime = s.time; }
+                  const key = todayKey() + "_" + s.id;
+                  if(now.getHours() === s.h &amp;&amp; now.getMinutes() === s.m &amp;&amp; now.getSeconds() &lt; 10){
+                    if(!fired[key] &amp;&amp; !getLog().data){
+                      fired[key] = true;
+                      startAlarm("🚨 ALARM " + s.time + " WIB — WAJIB SETOR SS!");
+                    }
+                  }
                 });
                 const sec = Math.floor(minDiff/1000);
                 const hh = String(Math.floor(sec/3600)).padStart(2,"0");
@@ -833,19 +820,18 @@ jobs:
                 const ss = String(sec%60).padStart(2,"0");
                 document.getElementById("nextTimer").textContent = nextTime + " (-" + hh + ":" + mm + ":" + ss + ")";
               }
-              renderCards();
+              renderUI();
               tick();
               setInterval(tick, 1000);
+              if(window.location.search.indexOf("ring=1") !== -1 &amp;&amp; !getLog().data){
+                startAlarm("🚨 WAKTUNYA ISI MONEV (WAJIB SS)!");
+              }
             &lt;/script&gt;
           &lt;/body&gt;
           &lt;/html&gt;
-          HTML_EOF
-
-          # Hilangkan spasi indentasi awal dari file XML &amp; HTML
-          sed -i 's/^          //' build_apk/AndroidManifest.xml
+          APK_HTML_EOF
           sed -i 's/^          //' build_apk/assets/index.html
 
-          # Cari lokasi Android SDK bawaan GitHub Runner
           SDK_DIR="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
           PLATFORM_JAR=$(find "$SDK_DIR/platforms" -name "android.jar" | sort -V | tail -n 1)
           AAPT=$(find "$SDK_DIR/build-tools" -name "aapt" | sort -V | tail -n 1)
@@ -853,30 +839,22 @@ jobs:
           ZIPALIGN=$(find "$SDK_DIR/build-tools" -name "zipalign" | sort -V | tail -n 1)
           APKSIGNER=$(find "$SDK_DIR/build-tools" -name "apksigner" | sort -V | tail -n 1)
 
-          echo "Menggunakan Platform: $PLATFORM_JAR"
-          echo "Menggunakan Build Tools: $AAPT"
-
-          # 1. Compile kode Java menjadi bytecode .class
           javac -source 1.8 -target 1.8 \
             -bootclasspath "$PLATFORM_JAR" \
             -classpath "$PLATFORM_JAR" \
             -d build_apk/classes \
             build_apk/src/id/maganghub/monevreminder/*.java
 
-          # 2. Konversi .class menjadi classes.dex dengan d8
           "$D8" --lib "$PLATFORM_JAR" --output build_apk/dex build_apk/classes/id/maganghub/monevreminder/*.class
 
-          # 3. Paketkan AndroidManifest.xml dan assets/index.html menjadi APK
           "$AAPT" package -f \
             -M build_apk/AndroidManifest.xml \
             -A build_apk/assets \
             -I "$PLATFORM_JAR" \
             -F build_apk/unaligned.apk
 
-          # 4. Masukkan classes.dex ke dalam root APK
           zip -j build_apk/unaligned.apk build_apk/dex/classes.dex
 
-          # 5. Zipalign &amp; Sign APK (Skema v1 + v2 agar bisa di-install di semua Android)
           "$ZIPALIGN" -f -p 4 build_apk/unaligned.apk build_apk/aligned.apk
 
           keytool -genkeypair -v \
@@ -887,7 +865,7 @@ jobs:
             -keyalg RSA \
             -keysize 2048 \
             -validity 10000 \
-            -dname "CN=Monev MagangHub,O=MagangHub,C=ID"
+            -dname "CN=Monev Alarm,O=MagangHub,C=ID"
 
           "$APKSIGNER" sign \
             --ks build_apk/debug.keystore \
@@ -895,441 +873,55 @@ jobs:
             --key-pass pass:android \
             --v1-signing-enabled true \
             --v2-signing-enabled true \
-            --out MonevMagangHub_62895394853580.apk \
+            --out AlarmMonev_WajibSS_20_22.apk \
             build_apk/aligned.apk
 
-          ls -lh MonevMagangHub_62895394853580.apk
+          ls -lh AlarmMonev_WajibSS_20_22.apk
 
       - name: Upload Compiled APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: APK-MonevMagangHub-62895394853580
-          path: MonevMagangHub_62895394853580.apk
+          name: APK-AlarmMonev-WajibSS-20-22
+          path: AlarmMonev_WajibSS_20_22.apk
 </pre>
-          </div>
-        </div>
-
-        <!-- Opsi Khusus Pengguna Unity (Tanpa Install Android Studio & Tanpa Desain UI Manual) -->
-        <div class="mt-6 pt-5 border-t border-slate-200 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider bg-indigo-600 text-white px-2.5 py-0.5 rounded-full">Khusus Pengguna Unity • Tanpa Android Studio</span>
-              <h3 class="text-base font-bold text-slate-900 mt-1.5">Build .APK Lewat Unity (Otomatis Buat UI Tanpa Setup Scene)</h3>
-              <p class="text-xs text-slate-600 mt-0.5">
-                Cukup tempel script <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono">MonevMagangHubUnityApp.cs</code> di bawah ini ke folder <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono">Assets/Scripts/</code> pada project Unity kosong apa saja, lalu klik <strong>File &gt; Build And Run (Android)</strong>. Script ini menggunakan <code class="bg-slate-100 px-1 rounded">[RuntimeInitializeOnLoadMethod]</code> sehingga seluruh tampilan UI dan jadwal WA ke <strong>62895394853580</strong> langsung muncul tanpa perlu membuat tombol manual di Scene!
-              </p>
-            </div>
-            <button id="copyUnityCsBtn" type="button" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm transition shrink-0">
-              Salin Script C# Unity
-            </button>
-          </div>
-
-          <div class="relative">
-            <div class="flex items-center justify-between bg-slate-800 text-slate-200 px-4 py-2 rounded-t-xl text-xs">
-              <span class="font-mono font-semibold">Assets/Scripts/MonevMagangHubUnityApp.cs (Unity C# — Auto UI + WA 62895394853580)</span>
-              <span class="text-[11px] text-emerald-300">Siap Pakai di Unity 2020 / 2021 / 2022 / Unity 6</span>
-            </div>
-            <pre id="codeUnityCs" class="bg-slate-900 text-emerald-300 p-4 rounded-b-xl text-xs font-mono overflow-x-auto max-h-80 leading-relaxed">// ============================================================================
-// MONEV MAGANGHUB REMINDER — UNITY ANDROID APP (AUTO-UI TANPA SETUP SCENE)
-// Cukup taruh file ini di folder Assets/Scripts/ pada project Unity apa saja!
-// Otomatis membuat tampilan UI, alarm 12:00, 15:30, 20:00 WIB &amp; kirim WA
-// ke 62895394853580 begitu game/aplikasi dijalankan.
-// ============================================================================
-
-using System;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.Networking;
-
-public class MonevMagangHubUnityApp : MonoBehaviour
-{
-    public const string TARGET_WA = "62895394853580";
-    public const string PORTAL_URL = "https://maganghub.kemnaker.go.id";
-
-    private Text clockText;
-    private Text countdownText;
-    private Text statusSiangText;
-    private Text statusSoreText;
-    private Text statusMalamText;
-    private InputField tokenInput;
-
-    private readonly int[] hours = { 12, 15, 20 };
-    private readonly int[] minutes = { 0, 30, 0 };
-    private readonly string[] labels = { "Sesi Siang (12:00)", "Sesi Sore (15:30)", "Sesi Malam (20:00)" };
-    private readonly string[] keys = { "siang_1200", "sore_1530", "malam_2000" };
-
-    // Otomatis dijalankan oleh Unity saat aplikasi mulai tanpa perlu pasang ke GameObject manual
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void AutoBootstrap()
-    {
-        if (FindObjectOfType&lt;MonevMagangHubUnityApp&gt;() != null) return;
-        GameObject host = new GameObject("MonevMagangHubUnityApp_Host");
-        DontDestroyOnLoad(host);
-        host.AddComponent&lt;MonevMagangHubUnityApp&gt;();
-    }
-
-    private void Awake()
-    {
-        Application.runInBackground = true;
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        BuildCompleteUnityUI();
-        ScheduleAndroidNativeAlarms();
-    }
-
-    private void Update()
-    {
-        DateTime now = DateTime.Now;
-        if (clockText != null)
-        {
-            clockText.text = now.ToString("HH:mm:ss") + " WIB";
-        }
-
-        // Hitung mundur ke jadwal berikutnya
-        DateTime nextTarget = DateTime.MaxValue;
-        string nextLabel = "";
-        for (int i = 0; i &lt; 3; i++)
-        {
-            DateTime candidate = new DateTime(now.Year, now.Month, now.Day, hours[i], minutes[i], 0);
-            if (candidate &lt;= now) candidate = candidate.AddDays(1);
-            if (candidate &lt; nextTarget)
-            {
-                nextTarget = candidate;
-                nextLabel = labels[i];
-            }
-
-            // Cek apakah tepat waktunya alarm berbunyi
-            string fireKey = "fired_" + now.ToString("yyyyMMdd") + "_" + keys[i];
-            if (now.Hour == hours[i] &amp;&amp; now.Minute == minutes[i] &amp;&amp; now.Second &lt; 5)
-            {
-                if (PlayerPrefs.GetInt(fireKey, 0) == 0)
-                {
-                    PlayerPrefs.SetInt(fireKey, 1);
-                    PlayerPrefs.Save();
-                    Handheld.Vibrate();
-                    TriggerWhatsAppReminder(i);
-                }
-            }
-        }
-
-        if (countdownText != null &amp;&amp; nextTarget != DateTime.MaxValue)
-        {
-            TimeSpan diff = nextTarget - now;
-            countdownText.text = string.Format(" Berikutnya: {0} (-{1:D2}:{2:D2}:{3:D2})",
-                nextLabel, (int)diff.TotalHours, diff.Minutes, diff.Seconds);
-        }
-    }
-
-    public void TriggerWhatsAppReminder(int slotIndex)
-    {
-        string sesi = labels[slotIndex];
-        string pesan = "Halo Peserta MagangHub! \n" +
-                       "*PENGINGAT PRESENSI MONEV MAGANGHUB*\n\n" +
-                       "Sekarang jadwal *" + sesi + "*. Jangan lupa mengisi presensi dan log harian Monev MagangHub Anda.\n\n" +
-                       "Link Portal: " + PORTAL_URL;
-
-        string savedToken = PlayerPrefs.GetString("fonnte_token", "").Trim();
-        if (!string.IsNullOrEmpty(savedToken))
-        {
-            StartCoroutine(SendViaFonnteCoroutine(savedToken, pesan));
-        }
-
-        string waUrl = "https://wa.me/" + TARGET_WA + "?text=" + UnityWebRequest.EscapeURL(pesan);
-        Application.OpenURL(waUrl);
-    }
-
-    private IEnumerator SendViaFonnteCoroutine(string token, string message)
-    {
-        WWWForm form = new WWWForm();
-        form.AddField("target", TARGET_WA);
-        form.AddField("message", message);
-
-        using (UnityWebRequest req = UnityWebRequest.Post("https://api.fonnte.com/send", form))
-        {
-            req.SetRequestHeader("Authorization", token);
-            yield return req.SendWebRequest();
-        }
-    }
-
-    public void ToggleDone(int slotIndex)
-    {
-        string key = "done_" + DateTime.Now.ToString("yyyyMMdd") + "_" + keys[slotIndex];
-        int current = PlayerPrefs.GetInt(key, 0);
-        PlayerPrefs.SetInt(key, current == 1 ? 0 : 1);
-        PlayerPrefs.Save();
-        RefreshStatusLabels();
-    }
-
-    private void RefreshStatusLabels()
-    {
-        string today = DateTime.Now.ToString("yyyyMMdd");
-        Text[] statusTexts = { statusSiangText, statusSoreText, statusMalamText };
-        for (int i = 0; i &lt; 3; i++)
-        {
-            if (statusTexts[i] == null) continue;
-            bool done = PlayerPrefs.GetInt("done_" + today + "_" + keys[i], 0) == 1;
-            statusTexts[i].text = done ? "STATUS: SUDAH PRESENSI ✓" : "STATUS: BELUM PRESENSI";
-            statusTexts[i].color = done ? new Color(0.02f, 0.59f, 0.41f) : new Color(0.85f, 0.35f, 0.05f);
-        }
-    }
-
-    // Menjadwalkan Alarm Android Native via AndroidJavaObject (Tanpa Android Studio)
-    private void ScheduleAndroidNativeAlarms()
-    {
-#if UNITY_ANDROID &amp;&amp; !UNITY_EDITOR
-        try
-        {
-            using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            using (AndroidJavaObject activity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;("currentActivity"))
-            using (AndroidJavaObject context = activity.Call&lt;AndroidJavaObject&gt;("getApplicationContext"))
-            {
-                // Menyimpan preferensi jadwal di SharedPreferences native Android
-                using (AndroidJavaObject prefs = context.Call&lt;AndroidJavaObject&gt;("getSharedPreferences", "MonevReminderPrefs", 0))
-                using (AndroidJavaObject editor = prefs.Call&lt;AndroidJavaObject&gt;("edit"))
-                {
-                    editor.Call&lt;AndroidJavaObject&gt;("putString", "target_wa", TARGET_WA).Call&lt;bool&gt;("commit");
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning("Info Native Android: " + e.Message);
-        }
-#endif
-    }
-
-    // Membangun seluruh UI secara otomatis dari kode (Tidak perlu buat Canvas manual di Scene)
-    private void BuildCompleteUnityUI()
-    {
-        if (FindObjectOfType&lt;EventSystem&gt;() == null)
-        {
-            GameObject es = new GameObject("EventSystem");
-            es.AddComponent&lt;EventSystem&gt;();
-            es.AddComponent&lt;StandaloneInputModule&gt;();
-            DontDestroyOnLoad(es);
-        }
-
-        GameObject canvasObj = new GameObject("MonevCanvas");
-        DontDestroyOnLoad(canvasObj);
-        Canvas canvas = canvasObj.AddComponent&lt;Canvas&gt;();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-        CanvasScaler scaler = canvasObj.AddComponent&lt;CanvasScaler&gt;();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1080, 1920);
-        scaler.matchWidthOrHeight = 0.5f;
-        canvasObj.AddComponent&lt;GraphicRaycaster&gt;();
-
-        Font font = Resources.GetBuiltinResource&lt;Font&gt;("LegacyRuntime.ttf");
-        if (font == null) font = Resources.GetBuiltinResource&lt;Font&gt;("Arial.ttf");
-
-        // Background Panel
-        GameObject bg = CreatePanel(canvasObj.transform, new Color(0.95f, 0.97f, 0.98f));
-        VerticalLayoutGroup rootLayout = bg.AddComponent&lt;VerticalLayoutGroup&gt;();
-        rootLayout.padding = new RectOffset(40, 40, 60, 40);
-        rootLayout.spacing = 24;
-        rootLayout.childControlWidth = true;
-        rootLayout.childControlHeight = false;
-        rootLayout.childForceExpandWidth = true;
-
-        // Header Card
-        GameObject headerCard = CreateCard(bg.transform, new Color(0.02f, 0.59f, 0.41f), 260);
-        CreateLabel(headerCard.transform, font, "MONEV MAGANGHUB REMINDER", 40, FontStyle.Bold, Color.white);
-        CreateLabel(headerCard.transform, font, "Target WA Otomatis: +" + TARGET_WA, 28, FontStyle.Normal, new Color(0.85f, 1f, 0.92f));
-        clockText = CreateLabel(headerCard.transform, font, "12:00:00 WIB", 48, FontStyle.Bold, Color.white);
-        countdownText = CreateLabel(headerCard.transform, font, "Menghitung jadwal berikutnya...", 26, FontStyle.Bold, new Color(1f, 0.92f, 0.5f));
-
-        // 3 Schedule Cards (12:00, 15:30, 20:00)
-        statusSiangText = BuildSessionCard(bg.transform, font, 0, "SESI 1 • JAM 12:00 SIANG", "Presensi &amp; laporan tengah hari");
-        statusSoreText  = BuildSessionCard(bg.transform, font, 1, "SESI 2 • JAM 15:30 SORE (SETENGAH 4)", "Presensi &amp; pengisian log sore");
-        statusMalamText = BuildSessionCard(bg.transform, font, 2, "SESI 3 • JAM 20:00 MALAM (JAM 8)", "Evaluasi &amp; kelengkapan presensi malam");
-
-        // Footer Portal &amp; Fonnte Box
-        GameObject footerCard = CreateCard(bg.transform, Color.white, 230);
-        CreateLabel(footerCard.transform, font, "Opsional: Isi Token Fonnte.com agar WA terkirim otomatis di background", 24, FontStyle.Normal, new Color(0.3f, 0.35f, 0.4f));
-
-        GameObject inputObj = new GameObject("TokenInput");
-        inputObj.transform.SetParent(footerCard.transform, false);
-        Image inputBg = inputObj.AddComponent&lt;Image&gt;();
-        inputBg.color = new Color(0.93f, 0.95f, 0.97f);
-        LayoutElement inputLE = inputObj.AddComponent&lt;LayoutElement&gt;();
-        inputLE.preferredHeight = 64;
-        tokenInput = inputObj.AddComponent&lt;InputField&gt;();
-        Text inputText = CreateLabel(inputObj.transform, font, "", 26, FontStyle.Normal, Color.black);
-        tokenInput.textComponent = inputText;
-        tokenInput.text = PlayerPrefs.GetString("fonnte_token", "");
-        tokenInput.onEndEdit.AddListener((val) =&gt; {
-            PlayerPrefs.SetString("fonnte_token", val.Trim());
-            PlayerPrefs.Save();
-        });
-
-        CreateButton(footerCard.transform, font, "BUKA PORTAL MONEV MAGANGHUB", new Color(0.08f, 0.12f, 0.2f), () =&gt; {
-            Application.OpenURL(PORTAL_URL);
-        });
-
-        RefreshStatusLabels();
-    }
-
-    private Text BuildSessionCard(Transform parent, Font font, int index, string title, string subtitle)
-    {
-        GameObject card = CreateCard(parent, Color.white, 310);
-        CreateLabel(card.transform, font, title, 34, FontStyle.Bold, new Color(0.08f, 0.12f, 0.2f));
-        CreateLabel(card.transform, font, subtitle, 25, FontStyle.Normal, new Color(0.4f, 0.45f, 0.52f));
-        Text statusLbl = CreateLabel(card.transform, font, "STATUS: BELUM PRESENSI", 26, FontStyle.Bold, new Color(0.85f, 0.35f, 0.05f));
-
-        GameObject btnRow = new GameObject("BtnRow");
-        btnRow.transform.SetParent(card.transform, false);
-        HorizontalLayoutGroup hlg = btnRow.AddComponent&lt;HorizontalLayoutGroup&gt;();
-        hlg.spacing = 16;
-        hlg.childControlWidth = true;
-        hlg.childControlHeight = true;
-        hlg.childForceExpandWidth = true;
-        LayoutElement rowLE = btnRow.AddComponent&lt;LayoutElement&gt;();
-        rowLE.preferredHeight = 76;
-
-        int captured = index;
-        CreateButton(btnRow.transform, font, "TANDAI SUDAH ISI", new Color(0.02f, 0.59f, 0.41f), () =&gt; ToggleDone(captured));
-        CreateButton(btnRow.transform, font, "KIRIM WA SEKARANG", new Color(0.15f, 0.22f, 0.32f), () =&gt; TriggerWhatsAppReminder(captured));
-
-        return statusLbl;
-    }
-
-    private GameObject CreatePanel(Transform parent, Color color)
-    {
-        GameObject panel = new GameObject("Panel");
-        panel.transform.SetParent(parent, false);
-        RectTransform rt = panel.AddComponent&lt;RectTransform&gt;();
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = Vector2.zero;
-        Image img = panel.AddComponent&lt;Image&gt;();
-        img.color = color;
-        return panel;
-    }
-
-    private GameObject CreateCard(Transform parent, Color bgColor, float height)
-    {
-        GameObject card = new GameObject("Card");
-        card.transform.SetParent(parent, false);
-        Image img = card.AddComponent&lt;Image&gt;();
-        img.color = bgColor;
-        LayoutElement le = card.AddComponent&lt;LayoutElement&gt;();
-        le.preferredHeight = height;
-        VerticalLayoutGroup vlg = card.AddComponent&lt;VerticalLayoutGroup&gt;();
-        vlg.padding = new RectOffset(28, 28, 22, 22);
-        vlg.spacing = 10;
-        vlg.childControlWidth = true;
-        vlg.childControlHeight = false;
-        vlg.childForceExpandWidth = true;
-        return card;
-    }
-
-    private Text CreateLabel(Transform parent, Font font, string content, int fontSize, FontStyle style, Color color)
-    {
-        GameObject txtObj = new GameObject("Label");
-        txtObj.transform.SetParent(parent, false);
-        Text txt = txtObj.AddComponent&lt;Text&gt;();
-        txt.font = font;
-        txt.text = content;
-        txt.fontSize = fontSize;
-        txt.fontStyle = style;
-        txt.color = color;
-        txt.alignment = TextAnchor.MiddleLeft;
-        LayoutElement le = txtObj.AddComponent&lt;LayoutElement&gt;();
-        le.preferredHeight = fontSize + 16;
-        return txt;
-    }
-
-    private void CreateButton(Transform parent, Font font, string label, Color bgColor, UnityEngine.Events.UnityAction onClick)
-    {
-        GameObject btnObj = new GameObject("Button_" + label);
-        btnObj.transform.SetParent(parent, false);
-        Image img = btnObj.AddComponent&lt;Image&gt;();
-        img.color = bgColor;
-        Button btn = btnObj.AddComponent&lt;Button&gt;();
-        btn.onClick.AddListener(onClick);
-        LayoutElement le = btnObj.AddComponent&lt;LayoutElement&gt;();
-        le.preferredHeight = 72;
-
-        GameObject txtObj = new GameObject("Text");
-        txtObj.transform.SetParent(btnObj.transform, false);
-        RectTransform rt = txtObj.AddComponent&lt;RectTransform&gt;();
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = Vector2.zero;
-
-        Text txt = txtObj.AddComponent&lt;Text&gt;();
-        txt.font = font;
-        txt.text = label;
-        txt.fontSize = 26;
-        txt.fontStyle = FontStyle.Bold;
-        txt.color = Color.white;
-        txt.alignment = TextAnchor.MiddleCenter;
-    }
-}
-</pre>
-          </div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-4 text-center text-xs text-slate-400 border-t border-slate-200/60">
-    Pengingat Presensi Monev MagangHub • Jadwal Otomatis: 12:00 WIB (Siang), 15:30 WIB (Setengah 4 Sore), 20:00 WIB (8 Malam)
+  <footer class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-4 text-center text-xs text-slate-500 border-t border-slate-800/80">
+    Alarm Presensi Monev MagangHub • Jadwal Pukul 20:00 WIB & 22:00 WIB • Sirine Hanya Berhenti Setelah Unggah Bukti Screenshot (SS)
   </footer>
 
   <script>
-    // --- SCHEDULE DEFINITIONS ---
+    // --- JADWAL ALARM: 20:00 DAN 22:00 WIB ---
     const SCHEDULES = [
       {
-        id: 'siang_1200',
-        label: 'Sesi Siang',
-        timeStr: '12:00',
-        hour: 12,
-        minute: 0,
-        desc: 'Pengingat presensi & cek progres tengah hari (Jam 12 Siang)',
-        badgeColor: 'bg-sky-100 text-sky-800 border-sky-200'
-      },
-      {
-        id: 'sore_1530',
-        label: 'Sesi Sore',
-        timeStr: '15:30',
-        hour: 15,
-        minute: 30,
-        desc: 'Pengingat presensi & pengisian log harian (Setengah 4 Sore)',
-        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200'
-      },
-      {
         id: 'malam_2000',
-        label: 'Sesi Malam',
+        label: 'Alarm Utama • 20:00 WIB',
         timeStr: '20:00',
         hour: 20,
         minute: 0,
-        desc: 'Evaluasi akhir & pengecekan kelengkapan presensi (Jam 8 Malam)',
-        badgeColor: 'bg-indigo-100 text-indigo-800 border-indigo-200'
+        desc: 'Alarm pengingat pertama pukul 8 malam. Berdering tanpa henti sampai Anda mengunggah Screenshot (SS) bukti pengisian Monev.'
+      },
+      {
+        id: 'malam_2200',
+        label: 'Alarm Terakhir • 22:00 WIB',
+        timeStr: '22:00',
+        hour: 22,
+        minute: 0,
+        desc: 'Alarm pengingat kedua pukul 10 malam. Otomatis nonaktif jika Anda sudah mengunggah SS Monev pada sesi pukul 20:00.'
       }
     ];
 
-    // --- STATE MANAGEMENT ---
-    const DEFAULT_STATE = {
-      phone: '62895394853580',
-      userName: 'Peserta MagangHub',
-      portalUrl: 'https://maganghub.kemnaker.go.id',
-      template: 'Halo *{nama}*! 👋\n🔔 *PENGINGAT PRESENSI MONEV MAGANGHUB*\n\nSekarang pukul *{jam} WIB* ({sesi}). Jangan lupa mengisi presensi dan laporan aktivitas Monev MagangHub Anda hari ini.\n\n🔗 Link Portal: {link}\n\nSemangat dan sukses magangnya! ✅',
-      autoGateway: false,
-      fonnteToken: '',
-      soundEnabled: true,
-      firedSlotsToday: {},
-      logsByDate: {}
-    };
+    const STORAGE_KEY = 'monev_strict_ss_alarm_v2';
 
     let appState = loadState();
-    let activeAlarmSessionId = null;
+    let activeRingingSlotId = null;
+    let pendingModalSsData = null;
+    let sirenIntervalId = null;
+    let audioCtx = null;
 
     function getTodayKey() {
       const now = new Date();
@@ -1341,111 +933,96 @@ public class MonevMagangHubUnityApp : MonoBehaviour
 
     function loadState() {
       try {
-        const raw = localStorage.getItem('monev_maganghub_reminder_v1');
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
-          const parsed = JSON.parse(raw);
-          if (!parsed.phone || parsed.phone === '6281234567890') {
-            parsed.phone = '62895394853580';
-          }
-          return Object.assign({}, DEFAULT_STATE, parsed);
+          return Object.assign({ firedToday: {}, logsByDate: {} }, JSON.parse(raw));
         }
-      } catch (e) {
-        // Fallback if localStorage is restricted
-      }
-      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      } catch (e) {}
+      return { firedToday: {}, logsByDate: {} };
     }
 
     function saveState() {
       try {
-        localStorage.setItem('monev_maganghub_reminder_v1', JSON.stringify(appState));
-      } catch (e) {
-        // Ignore storage error in restricted iframe
-      }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {}
     }
 
     function ensureTodayLog() {
       const today = getTodayKey();
       if (!appState.logsByDate[today]) {
         appState.logsByDate[today] = {
-          siang_1200: { done: false, doneAt: null },
-          sore_1530: { done: false, doneAt: null },
           malam_2000: { done: false, doneAt: null },
-          note: ''
+          malam_2200: { done: false, doneAt: null },
+          ssFileName: null,
+          ssFileSize: null,
+          ssUploadedAt: null,
+          ssDataUrl: null
         };
       }
       return appState.logsByDate[today];
     }
 
-    // --- PHONE NORMALIZER ---
-    function normalizePhone(raw) {
-      let digits = String(raw || '').replace(/[^0-9]/g, '');
-      if (digits.startsWith('08')) {
-        digits = '62' + digits.slice(1);
-      } else if (digits.startsWith('8')) {
-        digits = '62' + digits;
-      }
-      return digits;
-    }
-
-    // --- FORMAT MESSAGE ---
-    function buildMessage(sessionObj) {
-      const s = sessionObj || SCHEDULES[0];
-      const msg = (appState.template || DEFAULT_STATE.template)
-        .replace(/\{nama\}/g, appState.userName || 'Peserta MagangHub')
-        .replace(/\{sesi\}/g, s.label)
-        .replace(/\{jam\}/g, s.timeStr)
-        .replace(/\{link\}/g, appState.portalUrl || 'https://maganghub.kemnaker.go.id');
-      return msg;
-    }
-
-    // --- WEB AUDIO SYNTHESIZER ALARM ---
-    function playNotificationChime() {
-      if (!appState.soundEnabled) return;
+    // --- SIRINE ALARM NON-STOP (WEB AUDIO API + VIBRATION) ---
+    function playSingleSirenCycle() {
       try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const notes = [523.25, 659.25, 783.99, 1046.5];
-        notes.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.14);
-          gain.gain.setValueAtTime(0.18, ctx.currentTime + idx * 0.14);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.14 + 0.35);
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const freqs = [880, 1174.66, 880, 1318.51];
+        freqs.forEach((f, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(f, now + idx * 0.2);
+          gain.gain.setValueAtTime(0.25, now + idx * 0.2);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.2 + 0.18);
           osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.14);
-          osc.stop(ctx.currentTime + idx * 0.14 + 0.36);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.2);
+          osc.stop(now + idx * 0.2 + 0.19);
         });
-      } catch (e) {
-        // Audio blocked or unsupported
+
+        if (navigator.vibrate) {
+          navigator.vibrate([400, 150, 400]);
+        }
+      } catch (e) {}
+    }
+
+    function startContinuousSiren() {
+      stopContinuousSiren();
+      playSingleSirenCycle();
+      sirenIntervalId = setInterval(playSingleSirenCycle, 1000);
+    }
+
+    function stopContinuousSiren() {
+      if (sirenIntervalId) {
+        clearInterval(sirenIntervalId);
+        sirenIntervalId = null;
+      }
+      if (navigator.vibrate) {
+        navigator.vibrate(0);
       }
     }
 
     // --- TOAST HELPER ---
-    let toastTimeout = null;
-    function showToast(message, isWarning) {
+    let toastTimer = null;
+    function showToast(msg, isWarn) {
       const banner = document.getElementById('toastBanner');
-      const msgEl = document.getElementById('toastMessage');
-      const iconEl = document.getElementById('toastIcon');
-      msgEl.textContent = message;
-      iconEl.className = isWarning
+      document.getElementById('toastMessage').textContent = msg;
+      document.getElementById('toastIcon').className = isWarn
         ? 'w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0'
         : 'w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0';
       banner.classList.remove('hidden');
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        banner.classList.add('hidden');
-      }, 4000);
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => banner.classList.add('hidden'), 4000);
     }
 
-    // ---CLIPBOARD HELPER ---
     function copyTextToClipboard(text, label) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast(label + ' berhasil disalin!');
-        }).catch(() => fallbackCopy(text, label));
+        navigator.clipboard.writeText(text).then(() => showToast(label + ' berhasil disalin!')).catch(() => fallbackCopy(text, label));
       } else {
         fallbackCopy(text, label);
       }
@@ -1461,99 +1038,136 @@ public class MonevMagangHubUnityApp : MonoBehaviour
       try {
         document.execCommand('copy');
         showToast(label + ' berhasil disalin!');
-      } catch (err) {
-        showToast('Gagal menyalin teks', true);
-      }
+      } catch (e) {}
       document.body.removeChild(ta);
     }
 
-    // --- WHATSAPP DISPATCHER ---
-    async function triggerWhatsAppForSession(sessionObj, openWindowIfNoGateway) {
-      const phone = normalizePhone(appState.phone);
-      const message = buildMessage(sessionObj);
-
-      // If Fonnte Gateway is enabled and token is provided, send via API automatically
-      if (appState.autoGateway && appState.fonnteToken.trim() !== '' && phone) {
-        try {
-          const formData = new FormData();
-          formData.append('target', phone);
-          formData.append('message', message);
-          const res = await fetch('https://api.fonnte.com/send', {
-            method: 'POST',
-            headers: { Authorization: appState.fonnteToken.trim() },
-            body: formData
-          });
-          if (res.ok) {
-            showToast(`Pesan WA otomatis (${sessionObj.timeStr}) terkirim ke ${phone} via Gateway!`);
-            return;
+    // --- IMAGE COMPRESSOR (SO LOCALSTORAGE DOESN'T OVERFLOW) ---
+    function readAndCompressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 480;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
           }
-        } catch (err) {
-          showToast('Gateway gagal dihubungi, membuka link WhatsApp langsung...', true);
-        }
-      }
-
-      if (openWindowIfNoGateway) {
-        if (!phone) {
-          showToast('Masukkan nomor WhatsApp Anda terlebih dahulu!', true);
-          return;
-        }
-        const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-        window.open(waUrl, '_blank', 'noopener,noreferrer');
-        showToast(`Membuka WhatsApp ke ${phone}...`);
-      }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+          callback({
+            fileName: file.name,
+            fileSize: Math.round(file.size / 1024) + ' KB (' + img.width + 'x' + img.height + ')',
+            dataUrl: compressedDataUrl
+          });
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
-    // --- RENDER SCHEDULE CARDS ---
-    function renderScheduleCards() {
-      const container = document.getElementById('scheduleCardsGrid');
-      const todayLog = ensureTodayLog();
-      const now = new Date();
-      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    // --- TRIGGER UNSTOPPABLE ALARM MODAL ---
+    function triggerUnstoppableAlarm(slotObj) {
+      const s = slotObj || SCHEDULES[0];
+      activeRingingSlotId = s.id;
+      pendingModalSsData = null;
 
-      // Determine which slot is next
-      let nextSlotId = SCHEDULES[0].id;
-      for (const s of SCHEDULES) {
-        const slotMins = s.hour * 60 + s.minute;
-        if (slotMins > nowMinutes) {
-          nextSlotId = s.id;
-          break;
-        }
+      document.getElementById('modalSessionBadge').textContent = `🚨 SIRINE AKTIF • ${s.timeStr} WIB • TIDAK BISA DITUTUP`;
+      document.getElementById('modalTitle').textContent = `WAKTUNYA ISI MONEV (${s.timeStr} WIB)!`;
+      document.getElementById('alarmSsFileInput').value = '';
+      document.getElementById('modalSsPreviewBox').classList.add('hidden');
+
+      const stopBtn = document.getElementById('modalStopAlarmBtn');
+      stopBtn.disabled = true;
+      stopBtn.className = 'w-full py-3.5 px-5 rounded-2xl font-black text-sm tracking-wide transition shadow-lg bg-slate-700 text-slate-400 cursor-not-allowed';
+      stopBtn.textContent = '🔒 UNGGAH SCREENSHOT (SS) DULU UNTUK MEMATIKAN ALARM';
+
+      document.getElementById('alarmModal').classList.remove('hidden');
+      startContinuousSiren();
+    }
+
+    // --- APPLY SCREENSHOT PROOF & MARK TODAY DONE ---
+    function saveScreenshotProofForToday(ssInfo) {
+      const log = ensureTodayLog();
+      const now = new Date();
+      const timeStamp = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+
+      log.malam_2000 = { done: true, doneAt: timeStamp };
+      log.malam_2200 = { done: true, doneAt: timeStamp };
+      log.ssFileName = ssInfo.fileName;
+      log.ssFileSize = ssInfo.fileSize;
+      log.ssUploadedAt = timeStamp;
+      log.ssDataUrl = ssInfo.dataUrl;
+
+      saveState();
+      renderDashboard();
+      renderHistoryTable();
+    }
+
+    // --- RENDER DASHBOARD ---
+    function renderDashboard() {
+      const todayLog = ensureTodayLog();
+      const hasSs = Boolean(todayLog.ssDataUrl);
+
+      const badge = document.getElementById('earlyUploadStatusBadge');
+      if (hasSs) {
+        badge.textContent = `✓ Bukti SS Tersimpan (${todayLog.ssUploadedAt})`;
+        badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 self-start sm:self-center';
+        document.getElementById('todaySsEmptyState').classList.add('hidden');
+        document.getElementById('todaySsPreviewContainer').classList.remove('hidden');
+        document.getElementById('todaySsThumb').src = todayLog.ssDataUrl;
+        document.getElementById('todaySsName').textContent = todayLog.ssFileName || 'screenshot_monev.jpg';
+        document.getElementById('todaySsTime').textContent = `Diunggah pukul ${todayLog.ssUploadedAt} • ${todayLog.ssFileSize || ''}`;
+      } else {
+        badge.textContent = 'Belum Ada SS Hari Ini — Alarm Aktif';
+        badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 self-start sm:self-center';
+        document.getElementById('todaySsEmptyState').classList.remove('hidden');
+        document.getElementById('todaySsPreviewContainer').classList.add('hidden');
       }
 
-      container.innerHTML = SCHEDULES.map((s) => {
+      const grid = document.getElementById('scheduleCardsGrid');
+      grid.innerHTML = SCHEDULES.map((s) => {
         const entry = todayLog[s.id] || { done: false, doneAt: null };
-        const isNext = s.id === nextSlotId && !entry.done;
+        const isDone = entry.done && hasSs;
 
         return `
-          <div class="bg-white rounded-2xl border ${entry.done ? 'border-emerald-300 bg-emerald-50/20' : isNext ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-200/80'} p-5 shadow-sm flex flex-col justify-between transition">
+          <div class="rounded-2xl border ${isDone ? 'border-emerald-500/60 bg-emerald-950/20' : 'border-red-500/40 bg-slate-900'} p-5 shadow-lg flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="text-xs font-bold px-2.5 py-1 rounded-full border ${s.badgeColor}">${s.label}</span>
-                ${entry.done
-                  ? `<span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">✓ Sudah Presensi (${entry.doneAt})</span>`
-                  : isNext
-                    ? `<span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full pulse-ring"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Jadwal Terdekat</span>`
-                    : `<span class="text-xs font-medium text-slate-400">Menunggu</span>`
+                <span class="text-xs font-extrabold px-3 py-1 rounded-full ${isDone ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'}">
+                  ${s.label}
+                </span>
+                ${isDone
+                  ? `<span class="text-xs font-extrabold text-emerald-400">✓ Terverifikasi SS (${entry.doneAt})</span>`
+                  : `<span class="text-xs font-bold text-amber-400">⏰ Siaga (Wajib SS)</span>`
                 }
               </div>
 
-              <div class="flex items-baseline gap-2 my-1">
-                <span class="text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">${s.timeStr}</span>
-                <span class="text-xs font-semibold text-slate-500">WIB</span>
+              <div class="flex items-baseline gap-2 my-2">
+                <span class="text-4xl font-black text-white tracking-tight tabular-nums">${s.timeStr}</span>
+                <span class="text-sm font-bold text-slate-400">WIB</span>
               </div>
-              <p class="text-xs text-slate-500 leading-relaxed mt-1">${s.desc}</p>
+              <p class="text-xs text-slate-400 leading-relaxed">${s.desc}</p>
             </div>
 
-            <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center gap-2">
-              <button type="button" data-action="toggle-done" data-slot="${s.id}" class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition ${
-                entry.done
-                  ? 'bg-slate-200 hover:bg-slate-300 text-slate-700'
-                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
+            <div class="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between gap-2">
+              <button type="button" data-action="ring-slot" data-slot="${s.id}" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition ${
+                isDone
+                  ? 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                  : 'bg-red-600 hover:bg-red-500 text-white shadow'
               }">
-                ${entry.done ? 'Batalkan Status' : 'Tandai Sudah Isi'}
-              </button>
-              <button type="button" data-action="send-wa-slot" data-slot="${s.id}" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition" title="Kirim Pengingat Sesi Ini ke WA">
-                Kirim WA
+                ${isDone ? 'Uji Ulang Alarm Sesi Ini' : 'Bunyikan & Setor SS Sesi Ini'}
               </button>
             </div>
           </div>
@@ -1561,192 +1175,41 @@ public class MonevMagangHubUnityApp : MonoBehaviour
       }).join('');
     }
 
-    // --- RENDER PREVIEW & CODE GENERATORS ---
-    function updatePreviewAndCode() {
-      const cleanPhone = normalizePhone(appState.phone);
-      document.getElementById('previewTargetPhone').textContent = cleanPhone ? `+${cleanPhone}` : 'Belum diisi';
-      document.getElementById('openPortalLink').href = appState.portalUrl || 'https://maganghub.kemnaker.go.id';
-
-      // Preview uses the upcoming schedule
-      const now = new Date();
-      const nowMins = now.getHours() * 60 + now.getMinutes();
-      let previewSession = SCHEDULES[0];
-      for (const s of SCHEDULES) {
-        if (s.hour * 60 + s.minute >= nowMins) {
-          previewSession = s;
-          break;
-        }
-      }
-      document.getElementById('waPreviewBubble').textContent = buildMessage(previewSession);
-
-      // Update Google Apps Script code
-      const tokenPlaceholder = appState.fonnteToken.trim() || 'ISI_TOKEN_FONNTE_ANDA_DI_SINI';
-      const escapedTemplate = (appState.template || DEFAULT_STATE.template).replace(/`/g, '\\`');
-
-      const appsScriptCode = `// ============================================================================
-// BOT PENGINGAT WA PRESENSI MONEV MAGANGHUB (GOOGLE APPS SCRIPT - GRATIS 24/7)
-// Jadwal Otomatis: 12:00 Siang, 15:30 Sore, dan 20:00 Malam
-// ============================================================================
-
-const CONFIG = {
-  TARGET_WA: "${cleanPhone || '62895394853580'}",
-  NAMA: "${(appState.userName || 'Peserta MagangHub').replace(/"/g, '\\"')}",
-  LINK_MONEV: "${(appState.portalUrl || 'https://maganghub.kemnaker.go.id').replace(/"/g, '\\"')}",
-  FONNTE_TOKEN: "${tokenPlaceholder}" // Daftar gratis di https://fonnte.com
-};
-
-function kirimWaMonev(sesiLabel, jamLabel) {
-  const template = \`${escapedTemplate}\`;
-  const pesan = template
-    .replace(/\\{nama\\}/g, CONFIG.NAMA)
-    .replace(/\\{sesi\\}/g, sesiLabel)
-    .replace(/\\{jam\\}/g, jamLabel)
-    .replace(/\\{link\\}/g, CONFIG.LINK_MONEV);
-
-  const options = {
-    method: "post",
-    headers: { "Authorization": CONFIG.FONNTE_TOKEN },
-    payload: {
-      target: CONFIG.TARGET_WA,
-      message: pesan
-    },
-    muteHttpExceptions: true
-  };
-
-  const response = UrlFetchApp.fetch("https://api.fonnte.com/send", options);
-  Logger.log("Status Kirim WA (" + jamLabel + "): " + response.getContentText());
-}
-
-// Handler untuk masing-masing jam
-function pengingatJam12Siang() { kirimWaMonev("Sesi Siang", "12:00"); }
-function pengingatJamSetengah4Sore() { kirimWaMonev("Sesi Sore", "15:30"); }
-function pengingatJam8Malam() { kirimWaMonev("Sesi Malam", "20:00"); }
-
-// Jalankan fungsi ini SEKALI SAJA untuk mengaktifkan jadwal harian otomatis
-function pasangTriggerJadwal() {
-  // Hapus trigger lama agar tidak duplikat
-  ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
-
-  // 1. Trigger Jam 12:00 Siang
-  ScriptApp.newTrigger("pengingatJam12Siang")
-    .timeBased().everyDays(1).atHour(12).nearMinute(0).create();
-
-  // 2. Trigger Jam 15:30 (Setengah 4 Sore) — cek setiap menit di jam 15:30
-  ScriptApp.newTrigger("cekMenitSetengahEmpat")
-    .timeBased().everyMinutes(1).create();
-
-  // 3. Trigger Jam 20:00 (8 Malam)
-  ScriptApp.newTrigger("pengingatJam8Malam")
-    .timeBased().everyDays(1).atHour(20).nearMinute(0).create();
-
-  Logger.log("Berhasil memasang jadwal pengingat WA pukul 12:00, 15:30, dan 20:00!");
-}
-
-function cekMenitSetengahEmpat() {
-  const now = new Date();
-  if (now.getHours() === 15 && now.getMinutes() === 30) {
-    pengingatJamSetengah4Sore();
-  }
-}`;
-
-      document.getElementById('codeAppsScript').textContent = appsScriptCode;
-
-      // Update Node.js code
-      const nodeJsCode = `// ============================================================================
-// BOT WHATSAPP MONEV MAGANGHUB (NODE.JS + WHATSAPP-WEB.JS + NODE-CRON)
-// Install: npm i whatsapp-web.js qrcode-terminal node-cron
-// Jalankan: node bot_monev_wa.js
-// ============================================================================
-
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
-const cron = require('node-cron');
-
-const TARGET_NUMBER = '${cleanPhone || '62895394853580'}@c.us';
-const NAMA_PESERTA = '${(appState.userName || 'Peserta MagangHub').replace(/'/g, "\\'")}';
-const LINK_MONEV = '${(appState.portalUrl || 'https://maganghub.kemnaker.go.id').replace(/'/g, "\\'")}';
-
-const client = new Client({
-  authStrategy: new LocalAuth()
-});
-
-client.on('qr', (qr) => {
-  console.log('Scan QR Code ini menggunakan WhatsApp Anda:');
-  qrcode.generate(qr, { small: true });
-});
-
-function buatPesan(sesi, jam) {
-  return \`${escapedTemplate}\`
-    .replace(/\\{nama\\}/g, NAMA_PESERTA)
-    .replace(/\\{sesi\\}/g, sesi)
-    .replace(/\\{jam\\}/g, jam)
-    .replace(/\\{link\\}/g, LINK_MONEV);
-}
-
-client.on('ready', () => {
-  console.log('Bot Pengingat Monev MagangHub Aktif!');
-
-  // 1. Setiap Jam 12:00 Siang
-  cron.schedule('0 12 * * *', () => {
-    client.sendMessage(TARGET_NUMBER, buatPesan('Sesi Siang', '12:00'));
-  }, { timezone: 'Asia/Jakarta' });
-
-  // 2. Setiap Jam 15:30 (Setengah 4 Sore)
-  cron.schedule('30 15 * * *', () => {
-    client.sendMessage(TARGET_NUMBER, buatPesan('Sesi Sore', '15:30'));
-  }, { timezone: 'Asia/Jakarta' });
-
-  // 3. Setiap Jam 20:00 (8 Malam)
-  cron.schedule('0 20 * * *', () => {
-    client.sendMessage(TARGET_NUMBER, buatPesan('Sesi Malam', '20:00'));
-  }, { timezone: 'Asia/Jakarta' });
-});
-
-client.initialize();`;
-
-      document.getElementById('codeNodeJs').textContent = nodeJsCode;
-    }
-
     // --- RENDER HISTORY TABLE ---
     function renderHistoryTable() {
-      const tbody = document.getElementById('historyTableBody');
       ensureTodayLog();
+      const tbody = document.getElementById('historyTableBody');
       const dates = Object.keys(appState.logsByDate).sort().reverse();
 
-      tbody.innerHTML = dates.map((dateStr) => {
-        const row = appState.logsByDate[dateStr];
-        const renderBadge = (slotKey) => {
-          const item = row[slotKey] || { done: false, doneAt: null };
-          return item.done
-            ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">✓ Selesai (${item.doneAt})</span>`
-            : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 text-slate-500">Belum diisi</span>`;
-        };
-
+      tbody.innerHTML = dates.map((d) => {
+        const row = appState.logsByDate[d];
+        const s20 = row.malam_2000 && row.malam_2000.done;
+        const s22 = row.malam_2200 && row.malam_2200.done;
         return `
-          <tr class="hover:bg-slate-50/80">
-            <td class="py-3 px-4 font-semibold text-slate-900 whitespace-nowrap">${dateStr}</td>
-            <td class="py-3 px-4">${renderBadge('siang_1200')}</td>
-            <td class="py-3 px-4">${renderBadge('sore_1530')}</td>
-            <td class="py-3 px-4">${renderBadge('malam_2000')}</td>
-            <td class="py-3 px-4 text-slate-600 max-w-xs truncate">${row.note ? row.note : '<span class="text-slate-400 italic">Tidak ada catatan</span>'}</td>
+          <tr class="hover:bg-slate-800/40">
+            <td class="py-3 px-4 font-bold text-white whitespace-nowrap">${d}</td>
+            <td class="py-3 px-4">
+              ${s20
+                ? `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300">✓ Selesai (${row.malam_2000.doneAt})</span>`
+                : `<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400">Belum</span>`}
+            </td>
+            <td class="py-3 px-4">
+              ${s22
+                ? `<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300">✓ Selesai (${row.malam_2200.doneAt})</span>`
+                : `<span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400">Belum</span>`}
+            </td>
+            <td class="py-3 px-4 text-slate-300">${row.ssFileName ? `${row.ssFileName} <span class="text-slate-500">(${row.ssFileSize || ''})</span>` : '<span class="text-slate-500 italic">Belum ada SS</span>'}</td>
+            <td class="py-3 px-4">
+              ${row.ssDataUrl
+                ? `<img src="${row.ssDataUrl}" alt="SS ${d}" class="w-12 h-12 object-cover rounded-lg border border-emerald-500" />`
+                : '-'}
+            </td>
           </tr>
         `;
       }).join('');
     }
 
-    // --- ALARM MODAL TRIGGER ---
-    function openAlarmModal(sessionObj) {
-      activeAlarmSessionId = sessionObj.id;
-      document.getElementById('modalSessionBadge').textContent = `${sessionObj.label} • ${sessionObj.timeStr} WIB`;
-      document.getElementById('modalTitle').textContent = `Waktunya Mengisi Presensi Monev!`;
-      document.getElementById('modalMessage').textContent = buildMessage(sessionObj);
-      document.getElementById('alarmModal').classList.remove('hidden');
-      playNotificationChime();
-      triggerWhatsAppForSession(sessionObj, false);
-    }
-
-    // --- CLOCK & SCHEDULE TICKER ---
-    let clockInterval = null;
+    // --- CLOCK & ALARM SCHEDULER ---
     function tickClock() {
       const now = new Date();
       const hh = String(now.getHours()).padStart(2, '0');
@@ -1754,78 +1217,69 @@ client.initialize();`;
       const ss = String(now.getSeconds()).padStart(2, '0');
       document.getElementById('liveClock').textContent = `${hh}:${mm}:${ss} WIB`;
 
-      // Calculate next slot countdown
+      // Next alarm countdown (20:00 or 22:00)
       let nextSlot = null;
-      let minDiffMs = Infinity;
-
+      let minDiff = Infinity;
       for (const s of SCHEDULES) {
         const target = new Date(now);
         target.setHours(s.hour, s.minute, 0, 0);
-        if (target <= now) {
-          target.setDate(target.getDate() + 1);
-        }
+        if (target <= now) target.setDate(target.getDate() + 1);
         const diff = target - now;
-        if (diff < minDiffMs) {
-          minDiffMs = diff;
+        if (diff < minDiff) {
+          minDiff = diff;
           nextSlot = s;
         }
       }
 
       if (nextSlot) {
         document.getElementById('nextSlotLabel').textContent = `${nextSlot.timeStr} WIB`;
-        const totalSec = Math.floor(minDiffMs / 1000);
+        const totalSec = Math.floor(minDiff / 1000);
         const ch = String(Math.floor(totalSec / 3600)).padStart(2, '0');
         const cm = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
         const cs = String(totalSec % 60).padStart(2, '0');
         document.getElementById('countdownTimer').textContent = `-${ch}:${cm}:${cs}`;
       }
 
-      // Check if current exact hour:minute matches any schedule and hasn't fired today
+      // Auto-trigger at 20:00 and 22:00 if SS has not been uploaded today
       const todayKey = getTodayKey();
       const todayLog = ensureTodayLog();
+      const hasSsToday = Boolean(todayLog.ssDataUrl);
+
       for (const s of SCHEDULES) {
         const fireKey = `${todayKey}_${s.id}`;
         if (now.getHours() === s.hour && now.getMinutes() === s.minute && now.getSeconds() < 10) {
-          if (!appState.firedSlotsToday[fireKey] && (!todayLog[s.id] || !todayLog[s.id].done)) {
-            appState.firedSlotsToday[fireKey] = true;
+          if (!appState.firedToday[fireKey] && !hasSsToday) {
+            appState.firedToday[fireKey] = true;
             saveState();
-            openAlarmModal(s);
+            triggerUnstoppableAlarm(s);
           }
         }
       }
     }
 
-    // --- INITIALIZATION & EVENT LISTENERS ---
     window.addEventListener('DOMContentLoaded', () => {
-      const today = getTodayKey();
-      document.getElementById('todayDateLabel').textContent = today;
-
-      const todayLog = ensureTodayLog();
-      document.getElementById('waPhoneInput').value = appState.phone;
-      document.getElementById('userNameInput').value = appState.userName;
-      document.getElementById('portalUrlInput').value = appState.portalUrl;
-      document.getElementById('waTemplateInput').value = appState.template;
-      document.getElementById('autoGatewayToggle').checked = Boolean(appState.autoGateway);
-      document.getElementById('fonnteTokenInput').value = appState.fonnteToken || '';
-      document.getElementById('soundAlarmToggle').checked = Boolean(appState.soundEnabled);
-      document.getElementById('dailyMonevNote').value = todayLog.note || '';
-
-      if (appState.autoGateway) {
-        document.getElementById('gatewayTokenBox').classList.remove('hidden');
-      }
-
-      renderScheduleCards();
-      updatePreviewAndCode();
+      document.getElementById('todayDateLabel').textContent = getTodayKey();
+      renderDashboard();
       renderHistoryTable();
-
-      if (clockInterval) clearInterval(clockInterval);
       tickClock();
-      clockInterval = setInterval(tickClock, 1000);
+      setInterval(tickClock, 1000);
 
-      // Tab navigation
+      // If launched from Android native AlarmReceiver with ?ring=1
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('ring') === '1') {
+          const slotId = params.get('slot') || 'malam_2000';
+          const slotObj = SCHEDULES.find((x) => x.id === slotId) || SCHEDULES[0];
+          const todayLog = ensureTodayLog();
+          if (!todayLog.ssDataUrl) {
+            triggerUnstoppableAlarm(slotObj);
+          }
+        }
+      } catch (e) {}
+
+      // Tabs
       const tabs = [
         { btn: 'tabBtnDashboard', view: 'viewDashboard' },
-        { btn: 'tabBtnWaBot', view: 'viewWaBot' },
         { btn: 'tabBtnHistory', view: 'viewHistory' },
         { btn: 'tabBtnApk', view: 'viewApk' }
       ];
@@ -1836,238 +1290,135 @@ client.initialize();`;
             const v = document.getElementById(other.view);
             if (other.btn === t.btn) {
               v.classList.remove('hidden');
-              b.className = 'tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-xl bg-slate-50 text-emerald-800 shadow-sm transition flex items-center gap-2 shrink-0';
+              b.className = 'tab-btn px-4 py-2.5 text-xs sm:text-sm font-bold rounded-t-xl bg-slate-900 text-amber-400 shadow-sm transition flex items-center gap-2 shrink-0';
             } else {
               v.classList.add('hidden');
-              b.className = 'tab-btn px-4 py-2.5 text-sm font-semibold rounded-t-xl text-white/90 hover:bg-white/10 transition flex items-center gap-2 shrink-0';
+              b.className = 'tab-btn px-4 py-2.5 text-xs sm:text-sm font-bold rounded-t-xl text-white/85 hover:bg-white/10 transition flex items-center gap-2 shrink-0';
             }
           });
           if (t.view === 'viewHistory') renderHistoryTable();
-          if (t.view === 'viewWaBot') updatePreviewAndCode();
         });
       });
 
-      // Schedule card delegation
-      document.getElementById('scheduleCardsGrid').addEventListener('click', (e) => {
-        const btn = e.target.closest('button[data-action]');
-        if (!btn) return;
-        const action = btn.getAttribute('data-action');
-        const slotId = btn.getAttribute('data-slot');
-        const sessionObj = SCHEDULES.find((x) => x.id === slotId);
-        if (!sessionObj) return;
-
-        if (action === 'toggle-done') {
-          const log = ensureTodayLog();
-          const current = log[slotId] && log[slotId].done;
-          const now = new Date();
-          const timeStamp = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-          log[slotId] = {
-            done: !current,
-            doneAt: !current ? timeStamp : null
-          };
-          saveState();
-          renderScheduleCards();
-          renderHistoryTable();
-          showToast(!current ? `Presensi ${sessionObj.label} (${sessionObj.timeStr}) ditandai selesai!` : `Status ${sessionObj.label} dibuka kembali.`);
-        } else if (action === 'send-wa-slot') {
-          syncInputsToState();
-          triggerWhatsAppForSession(sessionObj, true);
-        }
-      });
-
-      // Sync inputs helper
-      function syncInputsToState() {
-        appState.phone = normalizePhone(document.getElementById('waPhoneInput').value);
-        document.getElementById('waPhoneInput').value = appState.phone;
-        appState.userName = document.getElementById('userNameInput').value.trim() || 'Peserta MagangHub';
-        appState.portalUrl = document.getElementById('portalUrlInput').value.trim() || 'https://maganghub.kemnaker.go.id';
-        appState.template = document.getElementById('waTemplateInput').value;
-        appState.autoGateway = document.getElementById('autoGatewayToggle').checked;
-        appState.fonnteToken = document.getElementById('fonnteTokenInput').value.trim();
-        appState.soundEnabled = document.getElementById('soundAlarmToggle').checked;
-        saveState();
-        updatePreviewAndCode();
-      }
-
-      ['waPhoneInput', 'userNameInput', 'portalUrlInput', 'waTemplateInput', 'fonnteTokenInput'].forEach((id) => {
-        document.getElementById(id).addEventListener('input', () => {
-          appState.phone = normalizePhone(document.getElementById('waPhoneInput').value);
-          appState.userName = document.getElementById('userNameInput').value.trim() || 'Peserta MagangHub';
-          appState.portalUrl = document.getElementById('portalUrlInput').value.trim() || 'https://maganghub.kemnaker.go.id';
-          appState.template = document.getElementById('waTemplateInput').value;
-          appState.fonnteToken = document.getElementById('fonnteTokenInput').value.trim();
-          updatePreviewAndCode();
-        });
-      });
-
-      document.getElementById('autoGatewayToggle').addEventListener('change', (e) => {
-        appState.autoGateway = e.target.checked;
-        document.getElementById('gatewayTokenBox').classList.toggle('hidden', !e.target.checked);
-        saveState();
-      });
-
-      document.getElementById('soundAlarmToggle').addEventListener('change', (e) => {
-        appState.soundEnabled = e.target.checked;
-        saveState();
-      });
-
-      document.getElementById('saveConfigBtn').addEventListener('click', () => {
-        syncInputsToState();
-        showToast('Pengaturan nomor WhatsApp & jadwal berhasil disimpan!');
-      });
-
-      document.getElementById('sendInstantWaBtn').addEventListener('click', () => {
-        syncInputsToState();
-        triggerWhatsAppForSession(SCHEDULES[0], true);
-      });
-
+      // Test Alarm Button
       document.getElementById('testAlarmBtn').addEventListener('click', () => {
-        syncInputsToState();
-        openAlarmModal(SCHEDULES[1]); // Preview 15:30 session alarm
+        triggerUnstoppableAlarm(SCHEDULES[0]);
       });
 
-      document.getElementById('copyMessageBtn').addEventListener('click', () => {
-        const text = document.getElementById('waPreviewBubble').textContent;
-        copyTextToClipboard(text, 'Pesan pengingat WA');
+      // Card delegation
+      document.getElementById('scheduleCardsGrid').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-action="ring-slot"]');
+        if (!btn) return;
+        const slotId = btn.getAttribute('data-slot');
+        const slotObj = SCHEDULES.find((x) => x.id === slotId) || SCHEDULES[0];
+        triggerUnstoppableAlarm(slotObj);
       });
 
-      // Daily note auto-save
-      document.getElementById('dailyMonevNote').addEventListener('input', (e) => {
-        const log = ensureTodayLog();
-        log.note = e.target.value;
-        saveState();
-        const indicator = document.getElementById('noteSavedIndicator');
-        indicator.textContent = 'Menyimpan...';
-        setTimeout(() => {
-          indicator.textContent = 'Tersimpan otomatis';
-        }, 400);
-      });
-
-      document.getElementById('copyNoteBtn').addEventListener('click', () => {
-        const note = document.getElementById('dailyMonevNote').value;
-        if (!note.trim()) {
-          showToast('Catatan aktivitas masih kosong!', true);
+      // Modal Screenshot File Input Listener
+      document.getElementById('alarmSsFileInput').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          showToast('File harus berupa gambar Screenshot (JPG/PNG/WEBP)!', true);
           return;
         }
-        copyTextToClipboard(note, 'Catatan aktivitas Monev');
+        readAndCompressImage(file, (ssData) => {
+          pendingModalSsData = ssData;
+          document.getElementById('modalSsPreviewBox').classList.remove('hidden');
+          document.getElementById('modalSsFileName').textContent = '✓ ' + ssData.fileName;
+          document.getElementById('modalSsFileSize').textContent = ssData.fileSize;
+          document.getElementById('modalSsPreviewImg').src = ssData.dataUrl;
+
+          const stopBtn = document.getElementById('modalStopAlarmBtn');
+          stopBtn.disabled = false;
+          stopBtn.className = 'w-full py-3.5 px-5 rounded-2xl font-black text-sm tracking-wide transition shadow-xl bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer';
+          stopBtn.textContent = '✅ BUKTI SS VALID — MATIKAN ALARM SEKARANG';
+        });
       });
 
-      // Alarm Modal buttons
-      document.getElementById('modalSendWaBtn').addEventListener('click', () => {
-        const sessionObj = SCHEDULES.find((s) => s.id === activeAlarmSessionId) || SCHEDULES[0];
-        triggerWhatsAppForSession(sessionObj, true);
-      });
-
-      document.getElementById('modalMarkDoneBtn').addEventListener('click', () => {
-        if (activeAlarmSessionId) {
-          const log = ensureTodayLog();
-          const now = new Date();
-          const timeStamp = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-          log[activeAlarmSessionId] = { done: true, doneAt: timeStamp };
-          saveState();
-          renderScheduleCards();
-          renderHistoryTable();
+      // Modal Stop Alarm Button (Only works once pendingModalSsData is populated)
+      document.getElementById('modalStopAlarmBtn').addEventListener('click', () => {
+        if (!pendingModalSsData) {
+          showToast('Wajib pilih gambar Screenshot (SS) bukti Monev terlebih dahulu!', true);
+          return;
         }
+        stopContinuousSiren();
+        saveScreenshotProofForToday(pendingModalSsData);
         document.getElementById('alarmModal').classList.add('hidden');
-        showToast('Presensi berhasil ditandai selesai!');
+        showToast('Alarm berhasil dimatikan & bukti Screenshot Monev hari ini tersimpan!');
       });
 
-      document.getElementById('modalDismissBtn').addEventListener('click', () => {
-        document.getElementById('alarmModal').classList.add('hidden');
+      // Direct early SS upload on dashboard
+      document.getElementById('directSsFileInput').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          showToast('Pilih file gambar Screenshot (JPG/PNG)!', true);
+          return;
+        }
+        readAndCompressImage(file, (ssData) => {
+          saveScreenshotProofForToday(ssData);
+          showToast('Bukti SS Monev hari ini tersimpan! Alarm pukul 20:00 & 22:00 malam ini otomatis nonaktif.');
+        });
       });
 
-      document.getElementById('closeToastBtn').addEventListener('click', () => {
-        document.getElementById('toastBanner').classList.add('hidden');
+      // Reset Today SS
+      document.getElementById('resetTodaySsBtn').addEventListener('click', () => {
+        const today = getTodayKey();
+        delete appState.logsByDate[today];
+        saveState();
+        document.getElementById('directSsFileInput').value = '';
+        renderDashboard();
+        renderHistoryTable();
+        showToast('Bukti SS hari ini dihapus. Alarm 20:00 & 22:00 kembali aktif.', true);
       });
 
-      // Bot sub-tabs
-      const modeAppsBtn = document.getElementById('modeBtnAppsScript');
-      const modeNodeBtn = document.getElementById('modeBtnNodeJs');
-      const panelApps = document.getElementById('panelAppsScript');
-      const panelNode = document.getElementById('panelNodeJs');
-
-      modeAppsBtn.addEventListener('click', () => {
-        panelApps.classList.remove('hidden');
-        panelNode.classList.add('hidden');
-        modeAppsBtn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm';
-        modeNodeBtn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
-      });
-
-      modeNodeBtn.addEventListener('click', () => {
-        panelNode.classList.remove('hidden');
-        panelApps.classList.add('hidden');
-        modeNodeBtn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm';
-        modeAppsBtn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
-      });
-
-      document.getElementById('copyAppsScriptBtn').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('codeAppsScript').textContent, 'Kode Google Apps Script');
-      });
-
-      document.getElementById('copyNodeJsBtn').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('codeNodeJs').textContent, 'Kode Bot Node.js');
-      });
-
-      // History buttons
+      // Export History
       document.getElementById('exportHistoryBtn').addEventListener('click', () => {
         const dates = Object.keys(appState.logsByDate).sort().reverse();
         const lines = dates.map((d) => {
           const r = appState.logsByDate[d];
-          const s1 = r.siang_1200 && r.siang_1200.done ? `Selesai (${r.siang_1200.doneAt})` : 'Belum';
-          const s2 = r.sore_1530 && r.sore_1530.done ? `Selesai (${r.sore_1530.doneAt})` : 'Belum';
-          const s3 = r.malam_2000 && r.malam_2000.done ? `Selesai (${r.malam_2000.doneAt})` : 'Belum';
-          return `${d} | 12:00: ${s1} | 15:30: ${s2} | 20:00: ${s3} | Catatan: ${r.note || '-'}`;
+          const status = r.ssFileName ? `Selesai (Bukti SS: ${r.ssFileName} pada ${r.ssUploadedAt})` : 'Belum Upload SS';
+          return `${d} | 20:00 & 22:00 WIB: ${status}`;
         });
-        copyTextToClipboard(lines.join('\n'), 'Rekap riwayat presensi');
+        copyTextToClipboard(lines.join('\n'), 'Rekap Bukti SS Monev');
       });
 
-      document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-        const todayKey = getTodayKey();
-        appState.logsByDate[todayKey] = {
-          siang_1200: { done: false, doneAt: null },
-          sore_1530: { done: false, doneAt: null },
-          malam_2000: { done: false, doneAt: null },
-          note: ''
-        };
-        document.getElementById('dailyMonevNote').value = '';
-        saveState();
-        renderScheduleCards();
-        renderHistoryTable();
-        showToast('Status presensi hari ini berhasil direset.');
-      });
-
-      // PWA & APK tab buttons
-      let deferredPrompt = null;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-      });
-
-      document.getElementById('installPwaBtn').addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          await deferredPrompt.userChoice;
-          deferredPrompt = null;
-        } else {
-          showToast('Di Chrome Android: ketuk menu ⋮ lalu pilih "Tambahkan ke Layar Utama" (Add to Home Screen).');
-        }
-      });
-
-      document.getElementById('copyGradleCmdBtn').addEventListener('click', () => {
-        copyTextToClipboard('./gradlew assembleDebug', 'Perintah build APK');
-      });
-
-      document.getElementById('testWaDirectApkBtn').addEventListener('click', () => {
-        syncInputsToState();
-        triggerWhatsAppForSession(SCHEDULES[0], true);
-      });
-
-      document.getElementById('copyUnityCsBtn').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('codeUnityCs').textContent, 'Script C# Unity (MonevMagangHubUnityApp.cs)');
-      });
-
+      // GitHub YAML Copy & Download
       document.getElementById('copyGithubYmlBtn').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('codeGithubYml').textContent, 'Kode Workflow GitHub Actions (build-apk.yml)');
+        copyTextToClipboard(document.getElementById('codeGithubYml').textContent, 'Kode build-apk.yml');
+      });
+
+      document.getElementById('downloadGithubYmlBtn').addEventListener('click', () => {
+        const ymlContent = document.getElementById('codeGithubYml').textContent;
+        const blob = new Blob([ymlContent], { type: 'text/yaml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'build-apk.yml';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('File build-apk.yml berhasil diunduh!');
+      });
+
+      document.getElementById('downloadHtmlAppBtn').addEventListener('click', () => {
+        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('File index.html berhasil diunduh!');
+      });
+
+      document.getElementById('closeToastBtn').addEventListener('click', () => {
+        document.getElementById('toastBanner').classList.add('hidden');
       });
     });
   </script>
